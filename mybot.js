@@ -25,7 +25,7 @@ client.on("message", (message) => {
         });
     }
     else if (message.content.startsWith("!p1p1 chaos")) {
-        message.channel.send(new Discord.RichEmbed().setDescription("This feature is not implemented yet!"));
+        message.channel.send(new Discord.RichEmbed().setDescription("This feature is not implemented yet! \n Check back later!"));
     }
     else if (message.content.startsWith("!p1p1 about")) {
         message.channel.send(new Discord.RichEmbed().setTitle("About Pack1Pick1 bot").setDescription("\
