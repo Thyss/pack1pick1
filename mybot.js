@@ -1,5 +1,6 @@
 var fs = require("fs");
 const Discord = require("discord.js");
+const Scry = require("scryfall-sdk");
 
 const client = new Discord.Client();
 
@@ -23,11 +24,12 @@ client.on("message", (message) => {
             message.channel.send(new Discord.RichEmbed().setDescription(selected).setFooter("Want to see the cards? Ask the Scryfall bot").setTitle("15 cards from Thepaupercube.com"));
         });
     }
-    else if (message.content.startsWith("!p1p1 m19")) {
-        message.channel.send("https://scryfall.com/card/bbd/220/dinrova-horror https://scryfall.com/card/m19/211/aerial-engineer https://scryfall.com/card/m19/302/aggressive-mammoth");
+    else if (message.content.startsWith("!p1p1 chaos")) {
+        message.channel.send(new Discord.RichEmbed().setDescription("This feature is not implemented yet!"));
     }
     else if (message.content.startsWith("!p1p1 about")) {
         message.channel.send(new Discord.RichEmbed().setTitle("About Pack1Pick1 bot").setDescription("\
+            This bot was made to generate booster packs and discuss what to pick first in certain packs. \n \
             Author: Martin Ekström \n \
             Discord username: Yunra \n \
             Support development by donating: https://www.paypal.me/yunra"));
@@ -35,7 +37,7 @@ client.on("message", (message) => {
     else if (message.content.startsWith("!p1p1 help")) {
         message.channel.send(new Discord.RichEmbed().setTitle("Supported commands").setDescription("\
             !p1p1 pauper - Generate a 15 card booster pack for thepaupercube.com \n  \
-            !p1p1 m19 - Generate a 15 card booster pack for Core Set 2019 \n \
+            !p1p1 chaos - Generate a 15 card booster pack from random cards through Magic's history! \n \
             - \n \
             !p1p1 about - Learn more about the bot \n \
             !p1p1 help - Displays this info, its literally the command you just used."
