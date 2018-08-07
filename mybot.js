@@ -16,6 +16,16 @@ client.on("message", (message) => {
             //Shuffle the cards so they aren't sorted and select 15 of them.
             const shuffled = textByLine.sort(() => .5 - Math.random());
             let selected = shuffled.slice(0,15);
+
+            //Create html page for viewing
+            var fileName = 'testpage.html';
+            var stream = fs.createWriteStream(fileName);
+
+            stream.once('open', function(fd) {
+            var html = '<!DOCTYPE html>' + '<html><head> <title>TEST</title> </head><body>TEST</body></html>';
+
+            stream.end(html);
+            });
            
             //Select a random card from the booster to set as the "playing" for the bot.
             var randcard = Math.floor(Math.random() * selected.length);
@@ -48,4 +58,4 @@ client.on("message", (message) => {
     }
 });
 
-client.login("NDc1MzU1Mzk0Nzk3OTk0MDE0.DkeMEQ.FgvNLmxPGOfPbcr9eca3tlGg2u0");
+client.login("NDc1Njc1MzM3MjM4NTExNjE5.Dkie1w.uuCe3W8QjXCwaF4Pln8LZd45By0");
