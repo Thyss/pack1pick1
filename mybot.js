@@ -8,13 +8,6 @@ client.on("ready", () => {
     console.log("I am ready!");
 });
 
-//Create webserver to serve the static webpages
-var connect = require('connect');
-var serveStatic = require('serve-static');
-connect().use(serveStatic(__dirname)).listen(8080, function(){
-    console.log('Server running on 8080...');
-});
-
 client.on("message", (message) => {
     if (message.content.startsWith("!p1p1 pauper")) {
         fs.readFile('./cardsets/paupercube.txt', 'utf8', function(err, text){
@@ -25,7 +18,7 @@ client.on("message", (message) => {
             let selected = shuffled.slice(0,15);
 
             //Create html page for viewing
-            var fileName = 'testpage.html';
+            var fileName = Date.now() + '.html';
             var stream = fs.createWriteStream(fileName);
 
             stream.once('open', function(fd) {
@@ -38,7 +31,7 @@ client.on("message", (message) => {
             var randcard = Math.floor(Math.random() * selected.length);
             client.user.setActivity(selected[randcard].toString(), { type: 'PLAYING'});
 
-            message.channel.send(new Discord.RichEmbed().setDescription(selected).setFooter("Want to see the cards? Ask the Scryfall bot").setTitle("15 cards from Thepaupercube.com"));
+            message.channel.send(new Discord.RichEmbed().setDescription(selected).setFooter("Want to see the cards? \n https://ancient-forest-92629.herokuapp.com/" + fileName).setTitle("15 cards from Thepaupercube.com"));
         });
     }
     else if (message.content.startsWith("!p1p1 chaos")) {
