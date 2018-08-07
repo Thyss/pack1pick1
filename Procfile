@@ -1,2 +1,2 @@
 worker: node mybot.js
-web: node webserver.js
+web: http-server
