@@ -22,7 +22,7 @@ client.on("message", (message) => {
             var stream = fs.createWriteStream(fileName);
 
             stream.once('open', function(fd) {
-            var html = '<!DOCTYPE html>' + '<html><head> <title>TEST</title> </head><body>TEST</body></html>';
+            var html = '<!DOCTYPE html>' + '<html><head> <title>TEST</title> </head><body>' + selected + '</body></html>';
 
             stream.end(html);
             });
