@@ -91,4 +91,4 @@ client.on("message", (message) => {
     }
 });
 
-client.login("NDc1MzU1Mzk0Nzk3OTk0MDE0.DkierQ.XKVwOPj8dAdsEoPceRKBz_Bw_Hk");
+client.login(process.env.discord_token);
