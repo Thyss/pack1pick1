@@ -1,5 +1,6 @@
 var fs = require("fs");
 const Discord = require("discord.js");
+var request = require('request');
 
 const client = new Discord.Client();
 
@@ -27,6 +28,11 @@ client.on("message", (message) => {
             client.user.setActivity(selected[randcard].toString(), { type: 'PLAYING'});
 
             message.channel.send(new Discord.RichEmbed().setDescription(selected).setURL(scryfalllink).setTitle("15 cards from Thepaupercube.com"));
+        });
+    }
+    else if (message.content.startsWith("!p1p1 brewchallenge")) {
+        request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
+            message.channel.send(new Discord.RichEmbed().setTitle(body.name).setDescription("This is your card now and your challenge is to brew a deck around it. \n Any format where it is legal is allowed.").setImage(body.image_uris.normal).setURL(body.uri));
         });
     }
     else if (message.content.startsWith("!p1p1 chaos")) {
@@ -81,6 +87,7 @@ client.on("message", (message) => {
             !p1p1 m19 - Generate a 15 card booster pack for Core Set 2019 \n  \
             !p1p1 pauper - Generate a 15 card booster pack for thepaupercube.com \n  \
             !p1p1 chaos - Generate a 15 card booster pack from random cards through Magic's history! \n \
+            !p1p1 brewchallenge - You get 1 randomly picked card and have to build a deck around it. \n \
             - \n \
             !p1p1 about - Learn more about the bot \n \
             !p1p1 help - Displays this info, its literally the command you just used."
