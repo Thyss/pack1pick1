@@ -1,18 +1,15 @@
 Aegis of the Heavens
 Aerial Engineer
-Aethershield Artificer
 Aether Tunnel
-Air Elemental
+Aethershield Artificer
 Ajani's Pridemate
 Ajani's Welcome
 Arcane Encyclopedia
-Arisen Gorgon
 Blanchwood Armor
 Blood Divination
 Bone to Ash
 Brawl-Bash Ogre
 Colossal Majesty
-Court Cleric
 Declare Dominance
 Departed Deckhand
 Diamond Mare
@@ -63,7 +60,6 @@ Reliquary Tower
 Rise from the Grave
 Rogue's Gloves
 Rupture Spire
-Sarkhan's Whelp
 Satyr Enchanter
 Shield Mare
 Siegebreaker Giant
@@ -76,11 +72,9 @@ Surge Mare
 Suspicious Bookcase
 Switcheroo
 Tectonic Rift
-Tezzeret's Strider
 Thud
 Vampire Sovereign
 Vigilant Baloth
 Vine Mare
-Vivien's Jaguar
 Volcanic Dragon
 Volley Veteran

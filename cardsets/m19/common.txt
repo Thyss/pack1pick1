@@ -4,7 +4,6 @@ Angel of the Dawn
 Anticipate
 Aven Wind Mage
 Aviation Pioneer
-Befuddle
 Boggart Brute
 Bogstomper
 Bristling Boar
@@ -42,7 +41,6 @@ Ghostform
 Giant Spider
 Goblin Instigator
 Goblin Motivator
-Grasping Scoundrel
 Greenwood Sentinel
 Havoc Devils
 Highland Game
@@ -53,12 +51,10 @@ Infectious Horror
 Infernal Scarring
 Inspired Charge
 Invoke the Divine
-Kargan Dragonrider
 Knight of the Tusk
 Knight's Pledge
 Lava Axe
 Lich's Caress
-Llanowar Elves
 Loxodon Line Breaker
 Luminous Bonds
 Macabre Waltz
@@ -67,17 +63,14 @@ Marauder's Axe
 Meandering River
 Mighty Leap
 Mind Rot
-Mist-Cloaked Herald
 Naturalize
 Oakenform
 Omenspeaker
 Onakke Ogre
 Oreskos Swiftclaw
 Pegasus Courser
-Pendulum of Patterns
 Plummet
 Rabid Bite
-Radiating Lightning
 Revitalize
 Rhox Oracle
 Root Snare
@@ -85,7 +78,6 @@ Rustwing Falcon
 Salvager of Secrets
 Scholar of Stars
 Shock
-Silverbeak Griffin
 Skeleton Archer
 Skymarch Bloodletter
 Skyscanner
@@ -97,11 +89,9 @@ Star-Crowned Stag
 Stone Quarry
 Strangling Spores
 Submerged Boneyard
-Sun Sentinel
 Sure Strike
 Take Vengeance
 Talons of Wildwood
-Tattered Mummy
 Thornhide Wolves
 Timber Gorge
 Titanic Growth
@@ -113,11 +103,9 @@ Trumpet Blast
 Trusty Packbeast
 Two-Headed Zombie
 Uncomfortable Chill
-Ursine Champion
-Vampire Neonate
-Viashino Pyromancer
 Walking Corpse
 Wall of Mist
 Wall of Vines
-Waterknot
+Vampire Neonate
+Viashino Pyromancer
 Woodland Stream

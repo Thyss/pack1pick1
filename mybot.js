@@ -33,29 +33,29 @@ client.on("message", (message) => {
         message.channel.send(new Discord.RichEmbed().setDescription("This feature is not implemented yet! \n Check back later!"));
     }
     else if (message.content.startsWith("!p1p1 m19")) {
-        fs.readFile('./cardsets/m19common.txt', 'utf8', function(err, text){
+        fs.readFile('./cardsets/m19/common.txt', 'utf8', function(err, text){
             var textByLine = text.split('\n');
             
             //Shuffle the cards so they aren't sorted and select 15 of them.
             const shuffled = textByLine.sort(() => .5 - Math.random());
             let selected = shuffled.slice(0,10);
-            fs.readFile('./cardsets/m19uncommon.txt', 'utf8', function(err, text){
+            fs.readFile('./cardsets/m19/uncommon.txt', 'utf8', function(err, text){
                 var textByLine = text.split('\n');
             
                 const uncommons = textByLine.sort(() => .5 - Math.random());
                 selectedUncommons = uncommons.slice(0,3);
                 selected = selected.concat(selectedUncommons);
 
-                fs.readFile('./cardsets/m19rare.txt', 'utf8', function(err, text){
+                fs.readFile('./cardsets/m19/rare.txt', 'utf8', function(err, text){
                     var textByLine = text.split('\n');
                 
                     //Shuffle the cards so they aren't sorted and select 15 of them.
                     const rares = textByLine.sort(() => .5 - Math.random());
                     selectedrares = rares.slice(0,1);
                     selected = selected.concat(selectedrares);
-                
+            
                     //Create scryfall link for images
-                    var scryfalllink = "https://scryfall.com/search?unique=cards&as=grid&order=rarity&q=";
+                    var scryfalllink = "https://scryfall.com/search?unique=cards&as=grid&order=rarity&set=m19&q=";
                     scryfalllink += selected.join('+or+!');
                     scryfalllink = scryfalllink.replace(/ /g, '-');
                     scryfalllink = scryfalllink.replace(/\s/g, ''); 
@@ -91,4 +91,4 @@ client.on("message", (message) => {
     }
 });
 
-client.login("NDc1MzU1Mzk0Nzk3OTk0MDE0.DkierQ.XKVwOPj8dAdsEoPceRKBz_Bw_Hk");
+client.login("NDc1Njc1MzM3MjM4NTExNjE5.Dkie1w.uuCe3W8QjXCwaF4Pln8LZd45By0");

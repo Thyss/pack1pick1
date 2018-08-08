@@ -1,5 +1,3 @@
-Aggressive Mammoth
-Ajani's Influence
 Ajani's Last Stand
 Alpine Moon
 Amulet of Safekeeping
@@ -20,7 +18,6 @@ Fraying Omnipotence
 Gigantosaurus
 Goblin Trashmaster
 Goreclaw, Terror of Qal Sisma
-Gravewaker
 Graveyard Marshal
 Hungering Hydra
 Infernal Reckoning
@@ -30,7 +27,6 @@ Lathliss, Dragon Queen
 Lena, Selfless Champion
 Leonin Warleader
 Liliana's Contract
-Liliana's Spoils
 Magistrate's Scepter
 Mentor of the Meek
 Metamorphic Alteration
@@ -43,21 +39,15 @@ Pelakka Wurm
 Phylactery Lich
 Prodigious Growth
 Remorseful Cleric
-Riddlemaster Sphinx
 Runic Armasaur
 Sai, Master Thopterist
-Sarkhan's Dragonfire
 Sarkhan's Unsealing
-Serra's Guardian
-Shivan Dragon
 Sigiled Sword of Valeron
-Skalla Wolf
 Spit Flame
 Suncleanser
 Supreme Phantom
-Tezzeret's Gatebreaker
 Thorn Lieutenant
 Transmogrifying Wand
 Valiant Knight
-Vivien's Invocation
 Windreader Sphinx
+Vivien's Invocation
