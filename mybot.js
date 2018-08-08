@@ -1,6 +1,5 @@
 var fs = require("fs");
 const Discord = require("discord.js");
-const Scry = require("scryfall-sdk");
 
 const client = new Discord.Client();
 
