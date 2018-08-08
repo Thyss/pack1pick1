@@ -32,7 +32,7 @@ client.on("message", (message) => {
     }
     else if (message.content.startsWith("!p1p1 brewchallenge")) {
         request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
-            message.channel.send(new Discord.RichEmbed().setTitle(body.name).setDescription("This is your card now and your challenge is to brew a deck around it. \n Any format where it is legal is allowed.").setImage(body.image_uris.normal).setURL(body.uri));
+            message.channel.send(new Discord.RichEmbed().setTitle(body.name).setDescription("This is your card now and your challenge is to brew a deck around it. \n Any format where it is legal is allowed.").setImage(body.image_uris.normal).setURL(body.scryfall_uri));
         });
     }
     else if (message.content.startsWith("!p1p1 chaos")) {
