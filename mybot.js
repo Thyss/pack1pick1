@@ -7,15 +7,6 @@ client.on("ready", () => {
     console.log("I am ready!");
 });
 
-function scryfalllink(selected, orderBy) {
-    //Create scryfall link for images
-    var scryfalllink = "https://scryfall.com/search?unique=cards&as=grid&order=" + orderBy + "&q=";
-    scryfalllink += selected.join('+or+!');
-    scryfalllink = scryfalllink.replace(/ /g, '-');
-    scryfalllink = scryfalllink.replace(/\s/g, '');  
-    return scryfalllink;
-}
-
 client.on("message", (message) => {
     if (message.content.startsWith("!p1p1 pauper")) {
         fs.readFile('./cardsets/paupercube.txt', 'utf8', function(err, text){
@@ -25,7 +16,11 @@ client.on("message", (message) => {
             const shuffled = textByLine.sort(() => .5 - Math.random());
             let selected = shuffled.slice(0,15);
 
-            scryfalllink = scryfalllink(selected, "name");
+            //Create scryfall link for images
+            var scryfalllink = "https://scryfall.com/search?unique=cards&as=grid&order=name&q=";
+            scryfalllink += selected.join('+or+!');
+            scryfalllink = scryfalllink.replace(/ /g, '-');
+            scryfalllink = scryfalllink.replace(/\s/g, '');  
            
             //Select a random card from the booster to set as the "playing" for the bot.
             var randcard = Math.floor(Math.random() * selected.length);
@@ -59,7 +54,11 @@ client.on("message", (message) => {
                     selectedrares = rares.slice(0,1);
                     selected = selected.concat(selectedrares);
                 
-                    scryfalllink = scryfalllink(selected, "rarity");
+                    //Create scryfall link for images
+                    var scryfalllink = "https://scryfall.com/search?unique=cards&as=grid&order=rarity&q=";
+                    scryfalllink += selected.join('+or+!');
+                    scryfalllink = scryfalllink.replace(/ /g, '-');
+                    scryfalllink = scryfalllink.replace(/\s/g, ''); 
                     
                     //Select a random card from the booster to set as the "playing" for the bot.
                     var randcard = Math.floor(Math.random() * selected.length);
