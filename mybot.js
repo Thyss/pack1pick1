@@ -17,21 +17,19 @@ client.on("message", (message) => {
             const shuffled = textByLine.sort(() => .5 - Math.random());
             let selected = shuffled.slice(0,15);
 
-            //Create html page for viewing
-            var fileName = Date.now() + '.html';
-            var stream = fs.createWriteStream(fileName);
-
-            stream.once('open', function(fd) {
-            var html = '<!DOCTYPE html>' + '<html><head> <title>TEST</title> </head><body>' + selected + '</body></html>';
-
-            stream.end(html);
-            });
+            //Create scryfall link for images
+            var scryfalllink = "https://scryfall.com/search?unique=cards&as=grid&order=name&q=";
+            scryfalllink += selected.join('+or+');
+            scryfalllink = scryfalllink.replace(/ /g, '-');
+            scryfalllink = scryfalllink.replace(/\s/g, '');
+            console.log(scryfalllink);
+            
            
             //Select a random card from the booster to set as the "playing" for the bot.
             var randcard = Math.floor(Math.random() * selected.length);
             client.user.setActivity(selected[randcard].toString(), { type: 'PLAYING'});
 
-            message.channel.send(new Discord.RichEmbed().setDescription(selected).setFooter("Want to see the cards? \n https://ancient-forest-92629.herokuapp.com/" + fileName).setTitle("15 cards from Thepaupercube.com"));
+            message.channel.send(new Discord.RichEmbed().setDescription(selected).setURL(scryfalllink).setTitle("15 cards from Thepaupercube.com"));
         });
     }
     else if (message.content.startsWith("!p1p1 chaos")) {
