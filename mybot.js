@@ -7,6 +7,15 @@ client.on("ready", () => {
     console.log("I am ready!");
 });
 
+function scryfalllink(selected, orderBy) {
+    //Create scryfall link for images
+    var scryfalllink = "https://scryfall.com/search?unique=cards&as=grid&order=" + orderBy + "&q=";
+    scryfalllink += selected.join('+or+!');
+    scryfalllink = scryfalllink.replace(/ /g, '-');
+    scryfalllink = scryfalllink.replace(/\s/g, '');  
+    return scryfalllink;
+}
+
 client.on("message", (message) => {
     if (message.content.startsWith("!p1p1 pauper")) {
         fs.readFile('./cardsets/paupercube.txt', 'utf8', function(err, text){
@@ -16,13 +25,7 @@ client.on("message", (message) => {
             const shuffled = textByLine.sort(() => .5 - Math.random());
             let selected = shuffled.slice(0,15);
 
-            //Create scryfall link for images
-            var scryfalllink = "https://scryfall.com/search?unique=cards&as=grid&order=name&q=";
-            scryfalllink += selected.join('+or+');
-            scryfalllink = scryfalllink.replace(/ /g, '-');
-            scryfalllink = scryfalllink.replace(/\s/g, '');
-            console.log(scryfalllink);
-            
+            scryfalllink = scryfalllink(selected, "name");
            
             //Select a random card from the booster to set as the "playing" for the bot.
             var randcard = Math.floor(Math.random() * selected.length);
@@ -33,6 +36,39 @@ client.on("message", (message) => {
     }
     else if (message.content.startsWith("!p1p1 chaos")) {
         message.channel.send(new Discord.RichEmbed().setDescription("This feature is not implemented yet! \n Check back later!"));
+    }
+    else if (message.content.startsWith("!p1p1 m19")) {
+        fs.readFile('./cardsets/m19common.txt', 'utf8', function(err, text){
+            var textByLine = text.split('\n');
+            
+            //Shuffle the cards so they aren't sorted and select 15 of them.
+            const shuffled = textByLine.sort(() => .5 - Math.random());
+            let selected = shuffled.slice(0,10);
+            fs.readFile('./cardsets/m19uncommon.txt', 'utf8', function(err, text){
+                var textByLine = text.split('\n');
+            
+                const uncommons = textByLine.sort(() => .5 - Math.random());
+                selectedUncommons = uncommons.slice(0,3);
+                selected = selected.concat(selectedUncommons);
+
+                fs.readFile('./cardsets/m19rare.txt', 'utf8', function(err, text){
+                    var textByLine = text.split('\n');
+                
+                    //Shuffle the cards so they aren't sorted and select 15 of them.
+                    const rares = textByLine.sort(() => .5 - Math.random());
+                    selectedrares = rares.slice(0,1);
+                    selected = selected.concat(selectedrares);
+                
+                    scryfalllink = scryfalllink(selected, "rarity");
+                    
+                    //Select a random card from the booster to set as the "playing" for the bot.
+                    var randcard = Math.floor(Math.random() * selected.length);
+                    client.user.setActivity(selected[randcard].toString(), { type: 'PLAYING'});
+
+                    message.channel.send(new Discord.RichEmbed().setDescription(selected).setURL(scryfalllink).setTitle("15 cards from Core Set 2019"));
+                });
+            });
+        });
     }
     else if (message.content.startsWith("!p1p1 about")) {
         message.channel.send(new Discord.RichEmbed().setTitle("About Pack1Pick1 bot").setDescription("\
