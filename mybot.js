@@ -79,6 +79,7 @@ client.on("message", (message) => {
     }
     else if (message.content.startsWith("!p1p1 help")) {
         message.channel.send(new Discord.RichEmbed().setTitle("Supported commands").setDescription("\
+            !p1p1 m19 - Generate a 15 card booster pack for Core Set 2019 \n  \
             !p1p1 pauper - Generate a 15 card booster pack for thepaupercube.com \n  \
             !p1p1 chaos - Generate a 15 card booster pack from random cards through Magic's history! \n \
             - \n \
