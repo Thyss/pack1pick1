@@ -19,41 +19,32 @@ function getCardsFromFile(file, amount) {
     var selected = [];
     selected = fs.readFileSync(file, 'utf8').toString().split('\n');
     var shuffled = shuffleArray(selected);
-    console.log(shuffled);
     var cards = shuffled.slice(0,amount);
     return cards;
 }
 
 //Create the scryfall link so you can view the cards easily
-function createScryfallLink(cardlist, order = rarity, set = m19) {
-    var scryfalllink = "https://scryfall.com/search?unique=cards&as=grid&order=" + order + "&set=" + set + "&q=";
+function createScryfallLink(cardlist, order = "rarity", set = "m19") {
+    var scryfalllink = "https://scryfall.com/search?unique=cards&as=grid&order=" + order + "&set=" + set + "&q=!";
     scryfalllink += cardlist.join('+or+!');
     scryfalllink = scryfalllink.replace(/ /g, '-');
     scryfalllink = scryfalllink.replace(/\s/g, ''); 
     return scryfalllink;
 }
 
-client.on("message", (message) => {
-    if (message.content.startsWith("!p1p1 pauper")) {
-        fs.readFile('./cardsets/paupercube.txt', 'utf8', function(err, text){
-            var textByLine = text.split('\n');
+//Select a random card from the booster to set as the "playing" for the bot.
+function setActivity(booster) {
+    var randcard = Math.floor(Math.random() * booster.length);
+    client.user.setActivity(booster[randcard].toString(), { type: 'PLAYING'});
+}
             
-            //Shuffle the cards so they aren't sorted and select 15 of them.
-            const shuffled = textByLine.sort(() => .5 - Math.random());
-            let selected = shuffled.slice(0,15);
-
+client.on("message", (message) => {
+    if (message.content.startsWith("!p1p1 paupercube")) {
+        let booster = getCardsFromFile('./cardsets/paupercube.txt', 15);
             //Create scryfall link for images
-            var scryfalllink = "https://scryfall.com/search?unique=cards&as=grid&order=name&q=";
-            scryfalllink += selected.join('+or+!');
-            scryfalllink = scryfalllink.replace(/ /g, '-');
-            scryfalllink = scryfalllink.replace(/\s/g, '');  
-           
-            //Select a random card from the booster to set as the "playing" for the bot.
-            var randcard = Math.floor(Math.random() * selected.length);
-            client.user.setActivity(selected[randcard].toString(), { type: 'PLAYING'});
-
-            message.channel.send(new Discord.RichEmbed().setDescription(selected).setURL(scryfalllink).setTitle("15 cards from Thepaupercube.com"));
-        });
+        var scryfalllink = createScryfallLink(booster, "name");           
+        setActivity(booster);
+        message.channel.send(new Discord.RichEmbed().setDescription(booster).setURL(scryfalllink).setTitle("15 cards from Thepaupercube.com"));
     }
     else if (message.content.startsWith("!p1p1 brewchallenge")) {
         request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
@@ -73,6 +64,7 @@ client.on("message", (message) => {
         } else {
             booster = booster.concat(getCardsFromFile('./cardsets/m19/rare.txt', 1));
         }
+        setActivity(booster);
         message.channel.send(new Discord.RichEmbed().setDescription(booster).setTitle("15 cards from Core Set 2019").setURL(createScryfallLink(booster, "rarity", "m19")));
     }
     else if (message.content.startsWith("!p1p1 about")) {
@@ -84,12 +76,11 @@ client.on("message", (message) => {
     }
     else if (message.content.startsWith("!p1p1 help")) {
         message.channel.send(new Discord.RichEmbed().setTitle("Supported commands").setDescription("\
-            !p1p1 m19 - Generate a 15 card booster pack for Core Set 2019 \n  \
-            !p1p1 pauper - Generate a 15 card booster pack for thepaupercube.com \n  \
-            !p1p1 chaos - Generate a 15 card booster pack from random cards through Magic's history! \n \
+            !p1p1 m19 - Generate a 15 card booster pack for Core Set 2019. \n  \
+            !p1p1 paupercube - Generate a 15 card booster pack for thepaupercube.com \n  \
             !p1p1 brewchallenge - You get 1 randomly picked card and have to build a deck around it. \n \
             - \n \
-            !p1p1 about - Learn more about the bot \n \
+            !p1p1 about - Learn more about the bot. \n \
             !p1p1 help - Displays this info, its literally the command you just used."
         ));
     }
