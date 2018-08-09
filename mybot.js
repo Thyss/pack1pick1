@@ -98,4 +98,4 @@ client.on("message", (message) => {
     }
 });
 
-client.login("NDc1Njc1MzM3MjM4NTExNjE5.DkyvmA.bCCfx61Ps-xpqhjCUYDCWRTmMPo");
+client.login(process.env.discord_token);
