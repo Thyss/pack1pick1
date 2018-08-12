@@ -52,7 +52,54 @@ client.on("message", (message) => {
         });
     }
     else if (message.content.startsWith("!p1p1 chaos")) {
-        message.channel.send(new Discord.RichEmbed().setDescription("This feature is not implemented yet! \n Check back later!"));
+        message.channel.send("Starting to generate random cards, hang on while i work!");
+        var booster = [];
+        request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
+            booster.push(body.name);
+            request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
+                booster.push(body.name);
+                request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
+                    booster.push(body.name);
+                    request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
+                        booster.push(body.name);
+                        request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
+                            booster.push(body.name);
+                            request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
+                                booster.push(body.name);
+                                request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
+                                    booster.push(body.name);
+                                    request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
+                                        booster.push(body.name);
+                                        request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
+                                            booster.push(body.name);
+                                            request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
+                                                booster.push(body.name);
+                                                request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
+                                                    booster.push(body.name);
+                                                    request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
+                                                        booster.push(body.name);
+                                                        request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
+                                                            booster.push(body.name);
+                                                            request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
+                                                                booster.push(body.name);
+                                                                request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
+                                                                    booster.push(body.name);
+                                                                    message.channel.send(new Discord.RichEmbed().setDescription(booster).setTitle("15 random cards from the history of Magic!").setURL(createScryfallLink(booster, "name")));
+                                                                });
+                                                            });
+                                                        });
+                                                    });
+                                                });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
     }
     else if (message.content.startsWith("!p1p1 m19")) {
         //Create the booster for this set
@@ -89,4 +136,4 @@ client.on("message", (message) => {
     }
 });
 
-client.login(process.env.discord_token);
+client.login("NDc1Njc1MzM3MjM4NTExNjE5.Dk4YgA.x9T2o9dqcCcPcP5x-jW2hiirjA4");
