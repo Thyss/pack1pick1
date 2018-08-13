@@ -51,6 +51,72 @@ client.on("message", (message) => {
             message.channel.send(new Discord.RichEmbed().setTitle(body.name).setDescription("This is your card now and your challenge is to brew a deck around it. \n Any format where it is legal is allowed.").setImage(body.image_uris.normal).setURL(body.scryfall_uri));
         });
     }
+    else if (message.content.startsWith("!p1p1 dom")) {
+        var highest_collector_number = 269;
+        var mythic = [];
+        var rare = [];
+        var uncommon = [];
+        var common = [];
+        request('https://api.scryfall.com/cards/search?order=set&q=e%3Adom&unique=prints', {json: true}, function (error, response, body) {
+            var set = JSON.parse(JSON.stringify(body));
+            var next_page = "";
+            let cards = set.data;
+            if (set.has_more = "true") {
+                next_page = set.next_page.replace("\u0026", "");
+                request(next_page, {json: true}, function (error, response, body2) {
+                    var moreinset = JSON.parse(JSON.stringify(body2));
+                    cards = cards.concat(moreinset.data);
+                    let legalCards = [];
+                    for(card of cards) {
+                        if (parseInt(card.collector_number) <= highest_collector_number) {
+                            legalCards.push(card);
+                        }
+                    };
+                    for (card of legalCards) {
+                        if (card.rarity == "common") {
+                            common.push(card);
+                        } else if(card.rarity == "uncommon") {
+                            uncommon.push(card);
+                        } else if (card.rarity == "rare") {
+                            rare.push(card);
+                        } else if (card.rarity == "mythic") {
+                            mythic.push(card);
+                        }
+                    }
+                    console.log("Commons2: " + common.length);
+                    console.log("Uncommons2: " + uncommon.length);
+                    console.log("Rares2: " + rare.length);
+                    console.log("Mythics2: " + mythic.length);
+                    console.log("Total2: " + legalCards.length);
+                    message.channel.send("test");
+                });
+            } else {
+                let legalCards = [];
+                for(card of cards) {
+                    if (parseInt(card.collector_number) <= highest_collector_number) {
+                        legalCards.push(card);
+                    }
+                };
+                for (card of legalCards) {
+                    if (card.rarity == "common") {
+                        common.push(card);
+                    } else if(card.rarity == "uncommon") {
+                        uncommon.push(card);
+                    } else if (card.rarity == "rare") {
+                        rare.push(card);
+                    } else if (card.rarity == "mythic") {
+                        mythic.push(card);
+                    }
+                }
+                console.log("Commons: " + common.length);
+                console.log("Uncommons: " + uncommon.length);
+                console.log("Rares: " + rare.length);
+                console.log("Mythics: " + mythic.length);
+                console.log("Total: " + legalCards.length);
+                message.channel.send("test");
+            }
+        });
+    }
     else if (message.content.startsWith("!p1p1 m19")) {
         //Create the booster for this set
         //Boosters might be different for any particular set so create them separately
@@ -88,4 +154,4 @@ If you can not see the boosters, check your discord settings if you have disable
     }
 });
 
-client.login(process.env.discord_token);
+client.login("NDc1Njc1MzM3MjM4NTExNjE5.DlDEvQ.YpaLumrJI_Hco2i-3HiUHV5nuzE");
