@@ -43,22 +43,52 @@ function setActivity(booster) {
 }
 
 //Takes a set (3 letters) and an amount of cards in the booster, default 14
-function generateBoosterFromScryfall(message, set, amount = 14, setname = set) {
-    message.channel.send("Hold on, generating booster from " + setname);
-    var mythic = [];
-    var rare = [];
-    var uncommon = [];
-    var common = [];
-    request('https://api.scryfall.com/cards/search?q=e%3A' + set + '+is%3Abooster+-t%3Abasic', {json: true}, function (error, response, body) {
-        var set = JSON.parse(JSON.stringify(body));
-        var next_page = "";
-        let cards = set.data;
-        if (set.has_more = "true") {
-            next_page = set.next_page.replace("\u0026", "");
-            request(next_page, {json: true}, function (error, response, body2) {
-                var moreinset = JSON.parse(JSON.stringify(body2));
-                cards = cards.concat(moreinset.data);
-                for (card of cards) {
+function generateBoosterFromScryfall(message, set, amount = 14) {
+    message.channel.send("Hold on, generating booster");
+    request('https://api.scryfall.com/sets/' + set, {json: true}, function (error, response, setData) {
+        var mythic = [];
+        var rare = [];
+        var uncommon = [];
+        var common = [];
+        request('https://api.scryfall.com/cards/search?q=e%3A' + set + '+is%3Abooster+-t%3Abasic', {json: true}, function (error, response, body) {
+            var set = JSON.parse(JSON.stringify(body));
+            var next_page = "";
+            let cards = set.data;
+            if (set.has_more = "true") {
+                next_page = set.next_page.replace("\u0026", "");
+                request(next_page, {json: true}, function (error, response, body2) {
+                    var moreinset = JSON.parse(JSON.stringify(body2));
+                    cards = cards.concat(moreinset.data);
+                    for (card of cards) {
+                        if (card.rarity == "common") {
+                            common.push(card);
+                        } else if(card.rarity == "uncommon") {
+                            uncommon.push(card);
+                        } else if (card.rarity == "rare") {
+                            rare.push(card);
+                        } else if (card.rarity == "mythic") {
+                            mythic.push(card);
+                        }
+                    }
+                    common = shuffleArray(common);
+                    uncommon = shuffleArray(uncommon);
+                    rare = shuffleArray(rare);
+                    mythic = shuffleArray(mythic);
+                    var booster = common.slice(0,10);
+                    booster = booster.concat(uncommon.slice(0,3));
+                    if (Math.floor(Math.random() * 7) == 0) {
+                        booster = booster.concat(mythic.slice(0,1));
+                    } else {
+                        booster = booster.concat(rare.slice(0,1));
+                    }
+                    var cardnames = [];
+                    for (card of booster) {
+                        cardnames.push(card.name);
+                    }
+                    message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", "dom")).setFooter(setData.name + " was released " + setData.released_at));
+                });
+            } else {
+                for (card of legalCards) {
                     if (card.rarity == "common") {
                         common.push(card);
                     } else if(card.rarity == "uncommon") {
@@ -70,51 +100,23 @@ function generateBoosterFromScryfall(message, set, amount = 14, setname = set) {
                     }
                 }
                 common = shuffleArray(common);
-                uncommon = shuffleArray(uncommon);
-                rare = shuffleArray(rare);
-                mythic = shuffleArray(mythic);
-                var booster = common.slice(0,10);
-                booster = booster.concat(uncommon.slice(0,3));
-                if (Math.floor(Math.random() * 7) == 0) {
-                    booster = booster.concat(mythic.slice(0,1));
-                } else {
-                    booster = booster.concat(rare.slice(0,1));
-                }
-                var cardnames = [];
-                for (card of booster) {
-                    cardnames.push(card.name);
-                }
-                message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setname).setURL(createScryfallLink(cardnames, "rarity", "dom")));
-            });
-        } else {
-            for (card of legalCards) {
-                if (card.rarity == "common") {
-                    common.push(card);
-                } else if(card.rarity == "uncommon") {
-                    uncommon.push(card);
-                } else if (card.rarity == "rare") {
-                    rare.push(card);
-                } else if (card.rarity == "mythic") {
-                    mythic.push(card);
-                }
+                    uncommon = shuffleArray(uncommon);
+                    rare = shuffleArray(rare);
+                    mythic = shuffleArray(mythic);
+                    var booster = common.slice(0,10);
+                    booster = booster.concat(uncommon.slice(0,3));
+                    if (Math.floor(Math.random() * 7) == 0) {
+                        booster = booster.concat(mythic.slice(0,1));
+                    } else {
+                        booster = booster.concat(rare.slice(0,1));
+                    }
+                    var cardnames = [];
+                    for (card of booster) {
+                        cardnames.push(card.name);
+                    }
+                    message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setname).setURL(createScryfallLink(cardnames, "rarity", "dom")));
             }
-            common = shuffleArray(common);
-                uncommon = shuffleArray(uncommon);
-                rare = shuffleArray(rare);
-                mythic = shuffleArray(mythic);
-                var booster = common.slice(0,10);
-                booster = booster.concat(uncommon.slice(0,3));
-                if (Math.floor(Math.random() * 7) == 0) {
-                    booster = booster.concat(mythic.slice(0,1));
-                } else {
-                    booster = booster.concat(rare.slice(0,1));
-                }
-                var cardnames = [];
-                for (card of booster) {
-                    cardnames.push(card.name);
-                }
-                message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setname).setURL(createScryfallLink(cardnames, "rarity", "dom")));
-        }
+        });
     });
 }
             
@@ -132,25 +134,25 @@ client.on("message", (message) => {
         });
     }
     else if (message.content.startsWith("!p1p1 dom")) {
-        generateBoosterFromScryfall(message, "dom", 14, "Dominaria");
+        generateBoosterFromScryfall(message, "dom", 14);
     }
     else if (message.content.startsWith("!p1p1 rix")) {
-        generateBoosterFromScryfall(message, "rix", 14, "Rivals of Ixalan");
+        generateBoosterFromScryfall(message, "rix", 14);
     }
     else if (message.content.startsWith("!p1p1 xln")) {
-        generateBoosterFromScryfall(message, "xln", 14, "Ixalan");
+        generateBoosterFromScryfall(message, "xln", 14);
     }
     else if (message.content.startsWith("!p1p1 hou")) {
-        generateBoosterFromScryfall(message, "hou", 14, "Hour of Devastation");
+        generateBoosterFromScryfall(message, "hou", 14);
     }
     else if (message.content.startsWith("!p1p1 akh")) {
-        generateBoosterFromScryfall(message, "akh", 14, "Amonkhet");
+        generateBoosterFromScryfall(message, "akh", 14);
     }
     else if (message.content.startsWith("!p1p1 aer")) {
-        generateBoosterFromScryfall(message, "aer", 14, "Aether Revolt");
+        generateBoosterFromScryfall(message, "aer", 14);
     }
     else if (message.content.startsWith("!p1p1 kld")) {
-        generateBoosterFromScryfall(message, "kld", 14, "Kaladesh");
+        generateBoosterFromScryfall(message, "kld", 14);
     }
     else if (message.content.startsWith("!p1p1 m19")) {
         //Create the booster for this set
