@@ -67,72 +67,6 @@ client.on("message", (message) => {
         setActivity(booster);
         message.channel.send(new Discord.RichEmbed().setDescription(booster).setTitle("15 cards from Core Set 2019").setURL(createScryfallLink(booster, "rarity", "m19")));
     }
-    else if (message.content.startsWith("!p1p1 dom")) {
-        var highest_collector_number = 269;
-        var mythic = [];
-        var rare = [];
-        var uncommon = [];
-        var common = [];
-        request('https://api.scryfall.com/cards/search?order=set&q=e%3Adom&unique=prints', {json: true}, function (error, response, body) {
-            var set = JSON.parse(JSON.stringify(body));
-            var next_page = "";
-            let cards = set.data;
-            if (set.has_more = "true") {
-                next_page = set.next_page.replace("\u0026", "");
-                request(next_page, {json: true}, function (error, response, body2) {
-                    var moreinset = JSON.parse(JSON.stringify(body2));
-                    cards = cards.concat(moreinset.data);
-                    let legalCards = [];
-                    for(card of cards) {
-                        if (parseInt(card.collector_number) <= highest_collector_number) {
-                            legalCards.push(card);
-                        }
-                    };
-                    for (card of legalCards) {
-                        if (card.rarity == "common") {
-                            common.push(card);
-                        } else if(card.rarity == "uncommon") {
-                            uncommon.push(card);
-                        } else if (card.rarity == "rare") {
-                            rare.push(card);
-                        } else if (card.rarity == "mythic") {
-                            mythic.push(card);
-                        }
-                    }
-                    console.log("Commons2: " + common.length);
-                    console.log("Uncommons2: " + uncommon.length);
-                    console.log("Rares2: " + rare.length);
-                    console.log("Mythics2: " + mythic.length);
-                    console.log("Total2: " + legalCards.length);
-                    message.channel.send("test");
-                });
-            } else {
-                let legalCards = [];
-                for(card of cards) {
-                    if (parseInt(card.collector_number) <= highest_collector_number) {
-                        legalCards.push(card);
-                    }
-                };
-                for (card of legalCards) {
-                    if (card.rarity == "common") {
-                        common.push(card);
-                    } else if(card.rarity == "uncommon") {
-                        uncommon.push(card);
-                    } else if (card.rarity == "rare") {
-                        rare.push(card);
-                    } else if (card.rarity == "mythic") {
-                        mythic.push(card);
-                    }
-                }
-                console.log("Commons: " + common.length);
-                console.log("Uncommons: " + uncommon.length);
-                console.log("Rares: " + rare.length);
-                console.log("Mythics: " + mythic.length);
-                console.log("Total: " + legalCards.length);
-                message.channel.send("test");
-            }
-        });
-    }
     else if (message.content.startsWith("!p1p1 about")) {
         message.channel.send("\
             This bot was made to generate booster packs and discuss what to pick first in packs. More sets will be available as i add them, feel free to come with feedback on what sets you would like to see supported. \n \n Author: Martin Ekström \n Discord username: Yunra \n Support development by donating: https://www.paypal.me/yunra");
@@ -154,4 +88,4 @@ If you can not see the boosters, check your discord settings if you have disable
     }
 });
 
-client.login("NDc1Njc1MzM3MjM4NTExNjE5.DlDEvQ.YpaLumrJI_Hco2i-3HiUHV5nuzE");
+client.login("process.env.discord_token");
