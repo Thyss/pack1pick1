@@ -31,33 +31,14 @@ function getCardsFromFile(file, amount) {
 function getCardsFromCT(response, amount) {
     var selected = [];
     selected = response.toString().split('\n');
+    selected.pop();
+    selected.shift();
+    console.log(selected.length);
     var shuffled = shuffleArray(selected);
     var cards = shuffled.slice(0,amount);
     return cards;
 }
 
-var tagBody = '(?:[^"\'>]|"[^"]*"|\'[^\']*\')*';
-
-var tagOrComment = new RegExp(
-    '<(?:'
-    // Comment body.
-    + '!--(?:(?:-*[^->])*--+|-?)'
-    // Special "raw text" elements whose content should be elided.
-    + '|script\\b' + tagBody + '>[\\s\\S]*?</script\\s*'
-    + '|style\\b' + tagBody + '>[\\s\\S]*?</style\\s*'
-    // Regular name
-    + '|/?[a-z]'
-    + tagBody
-    + ')>',
-    'gi');
-function removeTags(html) {
-  var oldHtml;
-  do {
-    oldHtml = html;
-    html = html.replace(tagOrComment, '');
-  } while (html !== oldHtml);
-  return html.replace(/</g, '&lt;');
-}
 
 //Create the scryfall link so you can view the cards easily
 function createScryfallLink(cardlist, order = "rarity", set = "m19") {
