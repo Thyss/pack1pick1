@@ -57,7 +57,7 @@ client.on("message", (message) => {
         var rare = [];
         var uncommon = [];
         var common = [];
-        request('https://api.scryfall.com/cards/search?order=set&q=e%3Adom&unique=prints', {json: true}, function (error, response, body) {
+        request('https://api.scryfall.com/cards/search?q=e%3Adom+is%3Abooster+-t%3Abasic', {json: true}, function (error, response, body) {
             var set = JSON.parse(JSON.stringify(body));
             var next_page = "";
             let cards = set.data;
@@ -83,12 +83,22 @@ client.on("message", (message) => {
                             mythic.push(card);
                         }
                     }
-                    console.log("Commons2: " + common.length);
-                    console.log("Uncommons2: " + uncommon.length);
-                    console.log("Rares2: " + rare.length);
-                    console.log("Mythics2: " + mythic.length);
-                    console.log("Total2: " + legalCards.length);
-                    message.channel.send("test");
+                    common = shuffleArray(common);
+                    uncommon = shuffleArray(uncommon);
+                    rare = shuffleArray(rare);
+                    mythic = shuffleArray(mythic);
+                    var booster = common.slice(0,10);
+                    booster = booster.concat(uncommon.slice(0,3));
+                    if (Math.floor(Math.random() * 7) == 0) {
+                        booster = booster.concat(mythic.slice(0,1));
+                    } else {
+                        booster = booster.concat(rare.slice(0,1));
+                    }
+                    var cardnames = [];
+                    for (card of booster) {
+                        cardnames.push(card.name);
+                    }
+                    message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle("14 cards from Dominaria").setURL(createScryfallLink(cardnames, "rarity", "dom")));
                 });
             } else {
                 let legalCards = [];
@@ -108,12 +118,22 @@ client.on("message", (message) => {
                         mythic.push(card);
                     }
                 }
-                console.log("Commons: " + common.length);
-                console.log("Uncommons: " + uncommon.length);
-                console.log("Rares: " + rare.length);
-                console.log("Mythics: " + mythic.length);
-                console.log("Total: " + legalCards.length);
-                message.channel.send("test");
+                common = shuffleArray(common);
+                    uncommon = shuffleArray(uncommon);
+                    rare = shuffleArray(rare);
+                    mythic = shuffleArray(mythic);
+                    var booster = common.slice(0,10);
+                    booster = booster.concat(uncommon.slice(0,3));
+                    if (Math.floor(Math.random() * 7) == 0) {
+                        booster = booster.concat(mythic.slice(0,1));
+                    } else {
+                        booster = booster.concat(rare.slice(0,1));
+                    }
+                    var cardnames = [];
+                    for (card of booster) {
+                        cardnames.push(card.name);
+                    }
+                    message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle("14 cards from Dominaria").setURL(createScryfallLink(cardnames, "rarity", "dom")));
             }
         });
     }
