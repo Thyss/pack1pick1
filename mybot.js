@@ -32,6 +32,29 @@ function getCardsFromCT(response, amount) {
     return cards;
 }
 
+var tagBody = '(?:[^"\'>]|"[^"]*"|\'[^\']*\')*';
+
+var tagOrComment = new RegExp(
+    '<(?:'
+    // Comment body.
+    + '!--(?:(?:-*[^->])*--+|-?)'
+    // Special "raw text" elements whose content should be elided.
+    + '|script\\b' + tagBody + '>[\\s\\S]*?</script\\s*'
+    + '|style\\b' + tagBody + '>[\\s\\S]*?</style\\s*'
+    // Regular name
+    + '|/?[a-z]'
+    + tagBody
+    + ')>',
+    'gi');
+function removeTags(html) {
+  var oldHtml;
+  do {
+    oldHtml = html;
+    html = html.replace(tagOrComment, '');
+  } while (html !== oldHtml);
+  return html.replace(/</g, '&lt;');
+}
+
 //Create the scryfall link so you can view the cards easily
 function createScryfallLink(cardlist, order = "rarity", set = "m19") {
     var scryfalllink = "https://scryfall.com/search?unique=cards&as=grid&order=" + order + "&set=" + set + "&q=!";
@@ -81,22 +104,27 @@ client.on("message", (message) => {
         console.log(ctID);
         if (/^[0-9]*$/.test(ctID)){
           let options = {
-            url:'http://www.cubetutor.com/viewcube.exportform.exportlistform', method:'POST',
-            form: {"t:ac": ctID,
-                  "t:formdata": "L+PVfUyWS7KfKAY1b/cATEoMx00=:H4sIAAAAAAAAAFvzloG1XI5BJiwztdy5NCnVKrWiIL+oJC2/KFcvLTMntaSyILW4iME0vyhdL7EgMTkjVa8kEShUUlRpqpecX5Sak5mkl5RYnKrnmAQUTEwucctMzUlRCU4tKS1QDT3M/VD0+B8mBkYfBu7k/LySovwcv8Tc1BIGIZ+sxLJE/ZzEvHT94JKizLx064qCEgYOkJ0hQDuJcJMjqW4KKMpPTi0uDi5Nys0sLs7Mzzu8LsUk7du8c0wMDBUF5TIMUthsLAYpLwHa54DXvuT83IL8vNS8kmI9sAUlmNbNDP4kuXVLizMTA5MPA0dyTiZQtWdKIUMdOHhSc1JzgQKg4AELgYMDYnm8EYJpAADQ2n82sgEAAA==",
-                  fileType:'CUBE_TXT',
-                  submit_0: "Export",
-                  "t:submit:": '["submit_2","submit_0"]'
-                },
-                headers: {
-                  'cookie': 'JSESSIONID=46160491092C9D57C43C94566C28C368;'
-                }
+            url: 'http://www.cubetutor.com/viewcube/' + ctID,
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
+            }
           }
           request(options,
                    function (error, response, body) {
-                      let booster = getCardsFromCT(body, 15);
-                      console.log('body:', body); // Print the HTML for the Google homepage.
-                      console.log("request", response.req['_header']);
+
+                      var a = /<\/a>/ig;
+                      var a2 = /<a\b[^>]*>/ig;
+                      var script = /<script[\s\S]*?>[\s\S]*?<\/script>/gi;
+                      var p = /<p[\s\S]*?>[\s\S]*?<\/p>/gi;
+                      var li = /<li[\s\S]*?>[\s\S]*?<\/li>/gi;
+                      var div1 = /<div[\s\S]*?>/gi;
+                      var div2 = /<\/div>/gi;
+                      var head = /<!DOC[\s\S]*?key:/gi;
+                      var closer = /<\/body><\/html>/gi;
+                      body2 = body.replace(a, '\n').replace(a2, '').replace(script, '').replace(p, '').replace(li, '').replace(div1, '').replace(div2, '').replace(head, '').replace(closer, '')
+                      console.log('body:', body2); // Print the HTML for the Google homepage.
+                      let booster = getCardsFromCT(body2, 15);
+                      // console.log("request", response.req['_header']);
                       console.log(booster);
                       var scryfalllink = createScryfallLink(booster, "name");
                       setActivity(booster);
