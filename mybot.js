@@ -88,4 +88,4 @@ If you can not see the boosters, check your discord settings if you have disable
     }
 });
 
-client.login("process.env.discord_token");
+client.login(process.env.discord_token);
