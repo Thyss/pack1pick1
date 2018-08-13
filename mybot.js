@@ -27,12 +27,25 @@ function getCardsFromFile(file, amount) {
     return cards;
 }
 
+//Get a booster with a certain number of cards from a cubetutor
+function getCardsFromCT(response, amount) {
+    var selected = [];
+    selected = response.toString().split('\n');
+    selected.pop();
+    selected.shift();
+    console.log(selected.length);
+    var shuffled = shuffleArray(selected);
+    var cards = shuffled.slice(0,amount);
+    return cards;
+}
+
+
 //Create the scryfall link so you can view the cards easily
 function createScryfallLink(cardlist, order = "rarity", set = "m19") {
     var scryfalllink = "https://scryfall.com/search?unique=cards&as=grid&order=" + order + "&set=" + set + "&q=!";
     scryfalllink += cardlist.join('+or+!');
     scryfalllink = scryfalllink.replace(/ /g, '-');
-    scryfalllink = scryfalllink.replace(/\s/g, ''); 
+    scryfalllink = scryfalllink.replace(/\s/g, '');
     return scryfalllink;
 }
 
@@ -121,12 +134,12 @@ function generateBoosterFromScryfall(message, set, amount = 14) {
         });
     });
 }
-            
+
 client.on("message", (message) => {
     if (message.content.startsWith("!p1p1 paupercube")) {
         let booster = getCardsFromFile('./cardsets/paupercube.txt', 15);
             //Create scryfall link for images
-        var scryfalllink = createScryfallLink(booster, "name");           
+        var scryfalllink = createScryfallLink(booster, "name");
         setActivity(booster);
         message.channel.send(new Discord.RichEmbed().setDescription(booster).setURL(scryfalllink).setTitle("15 cards from Thepaupercube.com"));
     }
@@ -134,6 +147,57 @@ client.on("message", (message) => {
         request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
             message.channel.send(new Discord.RichEmbed().setTitle(body.name).setDescription("This is your card now and your challenge is to brew a deck around it. \n Any format where it is legal is allowed.").setImage(body.image_uris.normal).setURL(body.scryfall_uri));
         });
+    }
+    else if (message.content.startsWith("!p1p1 m19")) {
+        //Create the booster for this set
+        //Boosters might be different for any particular set so create them separately
+        let booster = getCardsFromFile('./cardsets/m19/common.txt', 10);
+        booster = booster.concat(getCardsFromFile('./cardsets/m19/uncommon.txt', 3));
+        //Only generate mythic for every 8 packs.
+        //Random number between 0-8
+        if (Math.floor(Math.random() * 7) == 0) {
+            booster = booster.concat(getCardsFromFile('./cardsets/m19/mythic.txt', 1));
+            //console.log(new Date() + " Mythic!");
+        } else {
+            booster = booster.concat(getCardsFromFile('./cardsets/m19/rare.txt', 1));
+        }
+        setActivity(booster);
+        message.channel.send(new Discord.RichEmbed().setDescription(booster).setTitle("15 cards from Core Set 2019").setURL(createScryfallLink(booster, "rarity", "m19")));
+    }
+    else if (message.content.startsWith("!p1p1 ct")) {
+        let ctID = message.content.replace("!p1p1 ct ", "")
+        console.log(ctID);
+        if (/^[0-9]*$/.test(ctID)){
+          let options = {
+            url: 'http://www.cubetutor.com/viewcube/' + ctID,
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
+            }
+          }
+          request(options,
+                   function (error, response, body) {
+
+                      var a = /<\/a>/ig;
+                      var a2 = /<a\b[^>]*>/ig;
+                      var script = /<script[\s\S]*?>[\s\S]*?<\/script>/gi;
+                      var p = /<p[\s\S]*?>[\s\S]*?<\/p>/gi;
+                      var li = /<li[\s\S]*?>[\s\S]*?<\/li>/gi;
+                      var div1 = /<div[\s\S]*?>/gi;
+                      var div2 = /<\/div>/gi;
+                      var head = /<!DOC[\s\S]*?key:/gi;
+                      var closer = /<\/body><\/html>/gi;
+                      body2 = body.replace(a, '\n').replace(a2, '').replace(script, '').replace(p, '').replace(li, '').replace(div1, '').replace(div2, '').replace(head, '').replace(closer, '')
+                      console.log('body:', body2); // Print the HTML for the Google homepage.
+                      let booster = getCardsFromCT(body2, 15);
+                      // console.log("request", response.req['_header']);
+                      console.log(booster);
+                      var scryfalllink = createScryfallLink(booster, "name");
+                      setActivity(booster);
+                      message.channel.send(new Discord.RichEmbed().setDescription(booster).setURL(scryfalllink).setTitle("Results from cube with id: " + ctID));
+          });
+        } else {
+          message.channel.send(new Discord.RichEmbed().setDescription("The ID you entered is invalid").setTitle("Error"));
+        }
     }
     else if (message.content.startsWith("!p1p1 about")) {
         message.channel.send("\
@@ -167,4 +231,4 @@ Disclaimer: Some sets are not represented properly, like Dominaria f.ex is missi
     }
 });
 
-client.login(process.env.discord_token);
+client.login("NDc4NjAzMTM4MjEyMDM2NjA5.DlNGYg.eTAdpyDVJDs0g3gTztnvJqSy5Mo");
