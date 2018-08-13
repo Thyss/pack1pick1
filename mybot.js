@@ -174,4 +174,4 @@ If you can not see the boosters, check your discord settings if you have disable
     }
 });
 
-client.login("NDc1Njc1MzM3MjM4NTExNjE5.DlDEvQ.YpaLumrJI_Hco2i-3HiUHV5nuzE");
+client.login(process.env.discord_token);
