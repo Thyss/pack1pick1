@@ -56,34 +56,102 @@ client.on("message", (message) => {
         //Boosters might be different for any particular set so create them separately
         let booster = getCardsFromFile('./cardsets/m19/common.txt', 10);
         booster = booster.concat(getCardsFromFile('./cardsets/m19/uncommon.txt', 3));
-        if (Math.random() * (8 - 1) + 8 == 8) {
+        //Only generate mythic for every 8 packs.
+        //Random number between 0-8
+        if (Math.floor(Math.random() * 7) == 0) {
             booster = booster.concat(getCardsFromFile('./cardsets/m19/mythic.txt', 1));
+            //console.log(new Date() + " Mythic!");
         } else {
             booster = booster.concat(getCardsFromFile('./cardsets/m19/rare.txt', 1));
         }
         setActivity(booster);
         message.channel.send(new Discord.RichEmbed().setDescription(booster).setTitle("15 cards from Core Set 2019").setURL(createScryfallLink(booster, "rarity", "m19")));
     }
+    else if (message.content.startsWith("!p1p1 dom")) {
+        var highest_collector_number = 269;
+        var mythic = [];
+        var rare = [];
+        var uncommon = [];
+        var common = [];
+        request('https://api.scryfall.com/cards/search?order=set&q=e%3Adom&unique=prints', {json: true}, function (error, response, body) {
+            var set = JSON.parse(JSON.stringify(body));
+            var next_page = "";
+            let cards = set.data;
+            if (set.has_more = "true") {
+                next_page = set.next_page.replace("\u0026", "");
+                request(next_page, {json: true}, function (error, response, body2) {
+                    var moreinset = JSON.parse(JSON.stringify(body2));
+                    cards = cards.concat(moreinset.data);
+                    let legalCards = [];
+                    for(card of cards) {
+                        if (parseInt(card.collector_number) <= highest_collector_number) {
+                            legalCards.push(card);
+                        }
+                    };
+                    for (card of legalCards) {
+                        if (card.rarity == "common") {
+                            common.push(card);
+                        } else if(card.rarity == "uncommon") {
+                            uncommon.push(card);
+                        } else if (card.rarity == "rare") {
+                            rare.push(card);
+                        } else if (card.rarity == "mythic") {
+                            mythic.push(card);
+                        }
+                    }
+                    console.log("Commons2: " + common.length);
+                    console.log("Uncommons2: " + uncommon.length);
+                    console.log("Rares2: " + rare.length);
+                    console.log("Mythics2: " + mythic.length);
+                    console.log("Total2: " + legalCards.length);
+                    message.channel.send("test");
+                });
+            } else {
+                let legalCards = [];
+                for(card of cards) {
+                    if (parseInt(card.collector_number) <= highest_collector_number) {
+                        legalCards.push(card);
+                    }
+                };
+                for (card of legalCards) {
+                    if (card.rarity == "common") {
+                        common.push(card);
+                    } else if(card.rarity == "uncommon") {
+                        uncommon.push(card);
+                    } else if (card.rarity == "rare") {
+                        rare.push(card);
+                    } else if (card.rarity == "mythic") {
+                        mythic.push(card);
+                    }
+                }
+                console.log("Commons: " + common.length);
+                console.log("Uncommons: " + uncommon.length);
+                console.log("Rares: " + rare.length);
+                console.log("Mythics: " + mythic.length);
+                console.log("Total: " + legalCards.length);
+                message.channel.send("test");
+            }
+        });
+    }
     else if (message.content.startsWith("!p1p1 about")) {
-        message.channel.send(new Discord.RichEmbed().setTitle("About Pack1Pick1 bot").setDescription("\
-            This bot was made to generate booster packs and discuss what to pick first in certain packs. \n \
-            Author: Martin Ekström \n \
-            Discord username: Yunra \n \
-            Support development by donating: https://www.paypal.me/yunra"));
+        message.channel.send("\
+            This bot was made to generate booster packs and discuss what to pick first in packs. More sets will be available as i add them, feel free to come with feedback on what sets you would like to see supported. \n \n Author: Martin Ekström \n Discord username: Yunra \n Support development by donating: https://www.paypal.me/yunra");
     }
     else if (message.content.startsWith("!p1p1 help")) {
-        message.channel.send(new Discord.RichEmbed().setTitle("Supported commands").setDescription("\
-            !p1p1 m19 - Generate a 15 card booster pack for Core Set 2019. \n  \
-            !p1p1 paupercube - Generate a 15 card booster pack for thepaupercube.com \n  \
-            !p1p1 brewchallenge - You get 1 randomly picked card and have to build a deck around it. \n \
-            - \n \
-            !p1p1 about - Learn more about the bot. \n \
-            !p1p1 help - Displays this info, its literally the command you just used."
-        ));
+        message.channel.send("This bot supports the following commands \n \n \
+!p1p1 m19 - Generate a 15 card booster pack for Core Set 2019. \n \
+!p1p1 paupercube - Generate a 15 card booster pack for thepaupercube.com \n \
+!p1p1 brewchallenge - You get 1 randomly picked card and have to build a deck around it. \n \
+\n \
+!p1p1 about - Learn more about the bot. \n \
+!p1p1 help - Displays this info, its literally the command you just used. \n \
+\n \
+If you can not see the boosters, check your discord settings if you have disabled link previews."
+        );
     }
     else if (message.content.startsWith("!p1p1")) {
         message.channel.send("Use !p1p1 help");
     }
 });
 
-client.login(process.env.discord_token);
+client.login("NDc1Njc1MzM3MjM4NTExNjE5.DlDEvQ.YpaLumrJI_Hco2i-3HiUHV5nuzE");
