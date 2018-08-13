@@ -148,22 +148,6 @@ client.on("message", (message) => {
             message.channel.send(new Discord.RichEmbed().setTitle(body.name).setDescription("This is your card now and your challenge is to brew a deck around it. \n Any format where it is legal is allowed.").setImage(body.image_uris.normal).setURL(body.scryfall_uri));
         });
     }
-    else if (message.content.startsWith("!p1p1 m19")) {
-        //Create the booster for this set
-        //Boosters might be different for any particular set so create them separately
-        let booster = getCardsFromFile('./cardsets/m19/common.txt', 10);
-        booster = booster.concat(getCardsFromFile('./cardsets/m19/uncommon.txt', 3));
-        //Only generate mythic for every 8 packs.
-        //Random number between 0-8
-        if (Math.floor(Math.random() * 7) == 0) {
-            booster = booster.concat(getCardsFromFile('./cardsets/m19/mythic.txt', 1));
-            //console.log(new Date() + " Mythic!");
-        } else {
-            booster = booster.concat(getCardsFromFile('./cardsets/m19/rare.txt', 1));
-        }
-        setActivity(booster);
-        message.channel.send(new Discord.RichEmbed().setDescription(booster).setTitle("15 cards from Core Set 2019").setURL(createScryfallLink(booster, "rarity", "m19")));
-    }
     else if (message.content.startsWith("!p1p1 ct")) {
         let ctID = message.content.replace("!p1p1 ct ", "")
         console.log(ctID);
@@ -231,4 +215,4 @@ Disclaimer: Some sets are not represented properly, like Dominaria f.ex is missi
     }
 });
 
-client.login("NDc4NjAzMTM4MjEyMDM2NjA5.DlNGYg.eTAdpyDVJDs0g3gTztnvJqSy5Mo");
+client.login(process.env.discord_token);
