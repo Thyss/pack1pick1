@@ -10,6 +10,9 @@
 
 !p1p1 m19
 
+## Local development
+Create a ".env" file in the root directory and add a line for "discord_token=XXXXX"
+
 ## Help out?
 Feel free to contact me about features etc.
 

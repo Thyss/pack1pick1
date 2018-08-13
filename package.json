@@ -4,6 +4,7 @@
   "main": "mybot.js",
   "dependencies": {
     "discord.js": "^11.3.2",
+    "dotenv": "^6.0.0",
     "request": "^2.87.0"
   },
   "devDependencies": {},

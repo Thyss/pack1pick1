@@ -2,6 +2,10 @@ var fs = require("fs");
 const Discord = require("discord.js");
 var request = require('request');
 
+if(process.env.PROD !== "true") {
+    require('dotenv').load();
+}
+
 const client = new Discord.Client();
 
 client.on("ready", () => {
@@ -52,12 +56,13 @@ client.on("message", (message) => {
         });
     }
     else if (message.content.startsWith("!p1p1 dom")) {
+        var set = "dom";
         var highest_collector_number = 269;
         var mythic = [];
         var rare = [];
         var uncommon = [];
         var common = [];
-        request('https://api.scryfall.com/cards/search?q=e%3Adom+is%3Abooster+-t%3Abasic', {json: true}, function (error, response, body) {
+        request('https://api.scryfall.com/cards/search?q=e%3A' + set + '+is%3Abooster+-t%3Abasic', {json: true}, function (error, response, body) {
             var set = JSON.parse(JSON.stringify(body));
             var next_page = "";
             let cards = set.data;
