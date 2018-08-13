@@ -85,7 +85,7 @@ function generateBoosterFromScryfall(message, set, amount = 14) {
                     for (card of booster) {
                         cardnames.push(card.name);
                     }
-                    message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", "dom")).setFooter(setData.name + " was released " + setData.released_at));
+                    message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", set)).setFooter(setData.name + " was released " + setData.released_at));
                 });
             } else {
                 for (card of legalCards) {
@@ -100,21 +100,21 @@ function generateBoosterFromScryfall(message, set, amount = 14) {
                     }
                 }
                 common = shuffleArray(common);
-                    uncommon = shuffleArray(uncommon);
-                    rare = shuffleArray(rare);
-                    mythic = shuffleArray(mythic);
-                    var booster = common.slice(0,10);
-                    booster = booster.concat(uncommon.slice(0,3));
-                    if (Math.floor(Math.random() * 7) == 0) {
-                        booster = booster.concat(mythic.slice(0,1));
-                    } else {
-                        booster = booster.concat(rare.slice(0,1));
-                    }
-                    var cardnames = [];
-                    for (card of booster) {
-                        cardnames.push(card.name);
-                    }
-                    message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setname).setURL(createScryfallLink(cardnames, "rarity", "dom")));
+                uncommon = shuffleArray(uncommon);
+                rare = shuffleArray(rare);
+                mythic = shuffleArray(mythic);
+                var booster = common.slice(0,10);
+                booster = booster.concat(uncommon.slice(0,3));
+                if (Math.floor(Math.random() * 7) == 0) {
+                    booster = booster.concat(mythic.slice(0,1));
+                } else {
+                    booster = booster.concat(rare.slice(0,1));
+                }
+                var cardnames = [];
+                for (card of booster) {
+                    cardnames.push(card.name);
+                }
+                message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", set)).setFooter(setData.name + " was released " + setData.released_at));
             }
         });
     });
