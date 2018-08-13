@@ -85,6 +85,7 @@ function generateBoosterFromScryfall(message, set, amount = 14) {
                     for (card of booster) {
                         cardnames.push(card.name);
                     }
+                    setActivity(cardnames);
                     message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", set)).setFooter(setData.name + " was released " + setData.released_at));
                 });
             } else {
@@ -114,6 +115,7 @@ function generateBoosterFromScryfall(message, set, amount = 14) {
                 for (card of booster) {
                     cardnames.push(card.name);
                 }
+                setActivity(cardnames);
                 message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", set)).setFooter(setData.name + " was released " + setData.released_at));
             }
         });
