@@ -50,7 +50,6 @@ function createScryfallLink(cardlist, order = "rarity", set) {
     }
     scryfalllink = scryfalllink.replace(/ /g, '-');
     scryfalllink = scryfalllink.replace(/\s/g, '');
-    console.log(scryfalllink);
     return scryfalllink;
 }
 
