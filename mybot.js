@@ -170,8 +170,9 @@ client.on("message", (message) => {
                       var div1 = /<div[\s\S]*?>/gi;
                       var div2 = /<\/div>/gi;
                       var head = /<!DOC[\s\S]*?key:/gi;
+                      var headAlt = /<!DOC[\s\S]*?<br\/>/gi;
                       var closer = /<\/body><\/html>/gi;
-                      body2 = body.replace(a, '\n').replace(a2, '').replace(script, '').replace(p, '').replace(li, '').replace(div1, '').replace(div2, '').replace(head, '').replace(closer, '')
+                      body2 = body.replace(a, '\n').replace(a2, '').replace(script, '').replace(p, '').replace(li, '').replace(div1, '').replace(div2, '').replace(head, '').replace(headAlt, '').replace(closer, '')
                       let booster = getCardsFromCT(body2, 15);
                       var scryfalllink = createScryfallLink(booster, "name");
                       setActivity(booster);
