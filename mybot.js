@@ -185,7 +185,9 @@ client.on("message", (message) => {
     }
     else if (message.content.startsWith("!p1p1 about")) {
         message.channel.send("\
-            This bot was made to generate booster packs and discuss what to pick first in packs. More sets will be available as i add them, feel free to come with feedback on what sets you would like to see supported. \n \n Author: Martin Ekström \n Discord username: Yunra \n Support development by donating: https://www.paypal.me/yunra");
+            This bot was made to generate booster packs and discuss what to pick first in packs. More sets will be available as i add them, feel free to come with feedback on what sets you would like to see supported. \n \n Author: Martin Ekström \n Discord username: Yunra \n Support development by donating: https://www.paypal.me/yunra \n \
+    \n \
+Contributors: Omniczech sorted out the integration with CubeTutor");
     }
     else if (message.content.startsWith("!p1p1 help")) {
         message.channel.send("**Help section for Pack1Pick1-bot** \n \n \
