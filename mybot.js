@@ -40,11 +40,17 @@ function getCardsFromCT(response, amount) {
 
 
 //Create the scryfall link so you can view the cards easily
-function createScryfallLink(cardlist, order = "rarity", set = "m19") {
-    var scryfalllink = "https://scryfall.com/search?unique=cards&as=grid&order=" + order + "&set=" + set + "&q=!";
-    scryfalllink += cardlist.join('+or+!');
+function createScryfallLink(cardlist, order = "rarity", set) {
+    var scryfalllink = "https://scryfall.com/search?unique=cards&as=grid&order=" + order + "&q=!";
+    if (set) {
+        scryfalllink += cardlist.join('+e%3A' + set + '+or+!');
+        scryfalllink += '+e%3A' + set;
+    } else {
+        scryfalllink += cardlist.join('+or+!');
+    }
     scryfalllink = scryfalllink.replace(/ /g, '-');
     scryfalllink = scryfalllink.replace(/\s/g, '');
+    console.log(scryfalllink);
     return scryfalllink;
 }
 
@@ -98,7 +104,7 @@ function generateBoosterFromScryfall(message, set, amount = 14) {
                         cardnames.push(card.name);
                     }
                     setActivity(cardnames);
-                    message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", set)).setFooter(setData.name + " was released " + setData.released_at));
+                    message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at));
                 });
             } else {
                 for (card of legalCards) {
