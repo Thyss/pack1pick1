@@ -33,7 +33,6 @@ function getCardsFromCT(response, amount) {
     selected = response.toString().split('\n');
     selected.pop();
     selected.shift();
-    console.log(selected.length);
     var shuffled = shuffleArray(selected);
     var cards = shuffled.slice(0,amount);
     return cards;
@@ -136,21 +135,18 @@ function generateBoosterFromScryfall(message, set, amount = 14) {
 }
 
 client.on("message", (message) => {
-    if (message.content.startsWith("!p1p1 paupercube")) {
-        let booster = getCardsFromFile('./cardsets/paupercube.txt', 15);
-            //Create scryfall link for images
-        var scryfalllink = createScryfallLink(booster, "name");
-        setActivity(booster);
-        message.channel.send(new Discord.RichEmbed().setDescription(booster).setURL(scryfalllink).setTitle("15 cards from Thepaupercube.com"));
-    }
-    else if (message.content.startsWith("!p1p1 brewchallenge")) {
+    if (message.content.startsWith("!p1p1 brewchallenge")) {
         request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
             message.channel.send(new Discord.RichEmbed().setTitle(body.name).setDescription("This is your card now and your challenge is to brew a deck around it. \n Any format where it is legal is allowed.").setImage(body.image_uris.normal).setURL(body.scryfall_uri));
         });
     }
-    else if (message.content.startsWith("!p1p1 ct")) {
+    else if (message.content.startsWith("!p1p1 ct") || message.content.startsWith("!p1p1 paupercube")) {
         let ctID = message.content.replace("!p1p1 ct ", "")
-        console.log(ctID);
+        var title = "Results from cube with id: " + ctID;
+        if (message.content.startsWith("!p1p1 paupercube")) {
+            ctID = "96198";
+            title = "15 cards from thepaupercube.com";
+        }
         if (/^[0-9]*$/.test(ctID)){
           let options = {
             url: 'http://www.cubetutor.com/viewcube/' + ctID,
@@ -171,13 +167,10 @@ client.on("message", (message) => {
                       var head = /<!DOC[\s\S]*?key:/gi;
                       var closer = /<\/body><\/html>/gi;
                       body2 = body.replace(a, '\n').replace(a2, '').replace(script, '').replace(p, '').replace(li, '').replace(div1, '').replace(div2, '').replace(head, '').replace(closer, '')
-                      console.log('body:', body2); // Print the HTML for the Google homepage.
                       let booster = getCardsFromCT(body2, 15);
-                      // console.log("request", response.req['_header']);
-                      console.log(booster);
                       var scryfalllink = createScryfallLink(booster, "name");
                       setActivity(booster);
-                      message.channel.send(new Discord.RichEmbed().setDescription(booster).setURL(scryfalllink).setTitle("Results from cube with id: " + ctID));
+                      message.channel.send(new Discord.RichEmbed().setDescription(booster).setURL(scryfalllink).setTitle(title));
           });
         } else {
           message.channel.send(new Discord.RichEmbed().setDescription("The ID you entered is invalid").setTitle("Error"));
