@@ -71,6 +71,9 @@ function generateBoosterFromScryfall(message, set, amount = 14) {
         var rare = [];
         var uncommon = [];
         var common = [];
+        if(setData.card_count < 15) {
+            message.channel.send(setData.name + " only contains " + setData.card_count + " cards and can therefore not generate a booster. \nIt will release or was released " + setData.released_at);
+        } else {
         request('https://api.scryfall.com/cards/search?unique=cards&q=e%3A' + set + '+is%3Abooster+-t%3Abasic', {json: true}, function (error, response, body) {
             var set = JSON.parse(JSON.stringify(body));
             var next_page = "";
@@ -138,9 +141,11 @@ function generateBoosterFromScryfall(message, set, amount = 14) {
                     cardnames.push(card.name);
                 }
                 setActivity(cardnames);
-                message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", set)).setFooter(setData.name + " was released " + setData.released_at));
+                    message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at));
+                    log(message.author.id + " generated a " + setData.name + "-booster");
             }
         });
+        }
     });
 }
 
