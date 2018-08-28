@@ -9,8 +9,12 @@ if(process.env.PROD !== "true") {
 const client = new Discord.Client();
 
 client.on("ready", () => {
-    console.log("I am ready!");
+    console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
 });
+
+function log(event) {
+    console.log("[" + new Date() + "] " + event)
+};
 
 //Shuffle the array of cards to not always get the same 15 cards
 function shuffleArray(o) {
@@ -61,7 +65,7 @@ function setActivity(booster) {
 
 //Takes a set (3 letters) and an amount of cards in the booster, default 14
 function generateBoosterFromScryfall(message, set, amount = 14) {
-    message.channel.send("Hold on, generating booster");
+    message.channel.send("Hold on " + message.author.toString() + ", generating booster");
     request('https://api.scryfall.com/sets/' + set, {json: true}, function (error, response, setData) {
         var mythic = [];
         var rare = [];
@@ -104,6 +108,7 @@ function generateBoosterFromScryfall(message, set, amount = 14) {
                     }
                     setActivity(cardnames);
                     message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at));
+                    log(message.author.id + " generated a " + setData.name + "-booster");
                 });
             } else {
                 for (card of legalCards) {
@@ -143,6 +148,7 @@ client.on("message", (message) => {
     if (message.content.startsWith("!p1p1 brewchallenge")) {
         request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
             message.channel.send(new Discord.RichEmbed().setTitle(body.name).setDescription("This is your card now and your challenge is to brew a deck around it. \n Any format where it is legal is allowed.").setImage(body.image_uris.normal).setURL(body.scryfall_uri));
+            log(message.author.id + " started a brewchallenge and got: " + body.name);
         });
     }
     else if (message.content.startsWith("!p1p1 ct") || message.content.startsWith("!p1p1 paupercube")) {
@@ -175,11 +181,13 @@ client.on("message", (message) => {
                       body2 = body.replace(a, '\n').replace(a2, '').replace(script, '').replace(p, '').replace(li, '').replace(div1, '').replace(div2, '').replace(head, '').replace(headAlt, '').replace(closer, '')
                       let booster = getCardsFromCT(body2, 15);
                       var scryfalllink = createScryfallLink(booster, "name");
-                      setActivity(booster);
+
                       message.channel.send(new Discord.RichEmbed().setDescription(booster).setURL(scryfalllink).setTitle(title));
+                      log(message.author.id + " generated a booster from a cardtutor list with id: " + ctID);
           });
         } else {
           message.channel.send(new Discord.RichEmbed().setDescription("The ID you entered is invalid").setTitle("Error"));
+          log("[DEBUG] " + message.author.id + " tried to generate a booster from a cardtutor list with id: " + ctID);
         }
     }
     else if (message.content.startsWith("!p1p1 about")) {
