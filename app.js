@@ -72,7 +72,15 @@ function generateBoosterFromScryfall(message, set, amount = 14) {
         var uncommon = [];
         var common = [];
         if(setData.card_count < 15) {
-            message.channel.send(setData.name + " only contains " + setData.card_count + " cards and can therefore not generate a booster. \nIt will release or was released " + setData.released_at);
+            if(setData.card_count >= 1) {
+                request('https://api.scryfall.com/cards/grn', {json: true}, function(error, response, body){
+                    message.channel.send(setData.name + " only contains " + setData.card_count + " cards and can therefore not generate a booster. \nIt will release or was released " + setData.released_at);
+                    message.channel.send(new Discord.RichEmbed().setTitle("Check out the set on Scryfall").setURL(setData.scryfall_uri));
+                    log("[DEBUG]" + message.author.id + " wanted a " + setData.name + "-booster. the set only contains " + setData.card_count + " cards and can't generate a booster.");
+                }); 
+            } else {
+                message.channel.send(setData.name + " only contains " + setData.card_count + " cards and can therefore not generate a booster. \nIt will release or was released " + setData.released_at);
+            }
         } else {
         request('https://api.scryfall.com/cards/search?unique=cards&q=e%3A' + set + '+is%3Abooster+-t%3Abasic', {json: true}, function (error, response, body) {
             var set = JSON.parse(JSON.stringify(body));
@@ -197,7 +205,7 @@ client.on("message", (message) => {
     }
     else if (message.content.startsWith("!p1p1 about")) {
         message.channel.send("\
-            This bot was made to generate booster packs and discuss what to pick first in packs. More sets will be available as i add them, feel free to come with feedback on what sets you would like to see supported. \n \n Author: Martin Ekström \n Discord username: Yunra \n Support development by donating: https://www.paypal.me/yunra \n \
+            This bot was made to generate booster packs and discuss what to pick first in packs. More sets will be available as i add them, feel free to come with feedback on what sets you would like to see supported. \n \n Author: Martin Ekström \n Discord username: <@228197875308429313> \n Support development by donating: https://www.paypal.me/yunra \n \
     \n \
 Contributors: Omniczech sorted out the integration with CubeTutor");
     }
@@ -207,6 +215,11 @@ All sets in magic can be generated using their 3 letter code like so:\n \
 !p1p1 m19 \n \
 (This gives you a Core Set 2019 booster) \n \
 \n \
+If you have or find a set on CubeTutor you can use its ID to generate a booster\n \
+!p1p1 ct <id>\n \
+The cubes cubetutor id can be found in the url of the cube.\n \
+It is a set of numbers, just copy it and replace <ct> in the command above.\n \
+\n \
 !p1p1 paupercube - Generate a 15 card booster pack for thepaupercube.com \n \
 !p1p1 brewchallenge - You get 1 randomly picked card and have to build a deck around it. \n \
 \n \
@@ -214,6 +227,7 @@ All sets in magic can be generated using their 3 letter code like so:\n \
 !p1p1 help - Displays this info, its literally the command you just used. \n \
 \n \
 If you can not see the boosters, check your discord settings if you have disabled link previews. \n \
+\n \
 Disclaimer: Some sets are not represented properly, like Dominaria f.ex is missing its guaranteed legendary. This is being worked on as it pops up, feel free to report any set that is not working as it should."
         );
     }
