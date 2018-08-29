@@ -1,6 +1,7 @@
 var fs = require("fs");
 const Discord = require("discord.js");
 var request = require('request');
+var cache = require('memory-cache');
 
 if(process.env.PROD !== "true") {
     require('dotenv').load();
@@ -42,6 +43,7 @@ function getCardsFromCT(response, amount) {
     return cards;
 }
 
+//Check if a set is released by comparing the releasedate with todays date
 function isSetReleased(releasedate) {
     var today = new Date();
     var y = today.getFullYear();
@@ -79,20 +81,53 @@ function setActivity(booster) {
     client.user.setActivity(booster[randcard].toString(), { type: 'PLAYING'});
 }
 
-function getBasicLand() {
+//Get a basic land
+function getBasicLand(amount = 1) {
     var basics = ["Plains", "Island", "Swamp", "Mountain", "Forest"];
     var shuffledBasics = shuffleArray(basics);
-    return shuffledBasics.slice(0, 1);
+    return shuffledBasics.slice(0, amount);
+}
+
+//Create a booster with a set amount of mythics, rares, uncommons and commons
+function createBooster(set, mythicrares = 1, uncommons = 3, commons = 10) {
+    var mythic = [];
+    var rare = [];
+    var uncommon = [];
+    var common = [];
+    for (card of set) {
+        if (card.rarity == "common") {
+            common.push(card);
+        } else if(card.rarity == "uncommon") {
+            uncommon.push(card);
+        } else if (card.rarity == "rare") {
+            rare.push(card);
+        } else if (card.rarity == "mythic") {
+            mythic.push(card);
+        }
+    }
+    common = shuffleArray(common);
+    uncommon = shuffleArray(uncommon);
+    rare = shuffleArray(rare);
+    mythic = shuffleArray(mythic);
+    var booster = common.slice(0,commons);
+    booster = booster.concat(uncommon.slice(0,uncommons));
+    if (Math.floor(Math.random() * 7) == 0) {
+        booster = booster.concat(mythic.slice(0,mythicrares));
+    } else {
+        booster = booster.concat(rare.slice(0,mythicrares));
+    }
+    var cardnames = [];
+    for (card of booster) {
+        cardnames.push(card.name);
+    }
+    cardnames.push(getBasicLand());
+    return cardnames;
 }
 
 //Takes a set (3 letters) and an amount of cards in the booster, default 14
 function generateBoosterFromScryfall(message, set, amount = 14) {
     message.channel.send("Hold on " + message.author.toString() + ", generating booster");
     request('https://api.scryfall.com/sets/' + set, {json: true}, function (error, response, setData) {
-        var mythic = [];
-        var rare = [];
-        var uncommon = [];
-        var common = [];
         if(setData.card_count < 15) {
             if(setData.card_count >= 1) {                
                 request('https://api.scryfall.com/cards/grn', {json: true}, function(error, response, body){
@@ -104,43 +139,29 @@ function generateBoosterFromScryfall(message, set, amount = 14) {
                 message.channel.send(setData.name + " only contains " + setData.card_count + " cards and can therefore not generate a booster. \nIt will release or was released " + setData.released_at);
             }
         } else {
-        request('https://api.scryfall.com/cards/search?unique=cards&q=e%3A' + set + '+is%3Abooster+-t%3Abasic', {json: true}, function (error, response, body) {
-            var set = JSON.parse(JSON.stringify(body));
-            var next_page = "";
-            let cards = set.data;
-            if (typeof cards !== 'undefined' && cards) {
-                if (set.total_cards > 175) { //Scryfall returns 175 cards per request - https://scryfall.com/docs/api/cards/search
-                    next_page = set.next_page.replace("\u0026", "");
-                    request(next_page, {json: true}, function (error, response, body2) {
-                        var moreinset = JSON.parse(JSON.stringify(body2));
-                        cards = cards.concat(moreinset.data);
-                        for (card of cards) {
-                            if (card.rarity == "common") {
-                                common.push(card);
-                            } else if(card.rarity == "uncommon") {
-                                uncommon.push(card);
-                            } else if (card.rarity == "rare") {
-                                rare.push(card);
-                            } else if (card.rarity == "mythic") {
-                                mythic.push(card);
+            request('https://api.scryfall.com/cards/search?unique=cards&q=e%3A' + set + '+is%3Abooster+-t%3Abasic', {json: true}, function (error, response, body) {
+                var set = JSON.parse(JSON.stringify(body));
+                var next_page = "";
+                let cards = set.data;
+                if (typeof cards !== 'undefined' && cards) {
+                    if (set.total_cards > 175) { //Scryfall returns 175 cards per request - https://scryfall.com/docs/api/cards/search
+                        next_page = set.next_page.replace("\u0026", "");
+                        request(next_page, {json: true}, function (error, response, body2) {
+                            var moreinset = JSON.parse(JSON.stringify(body2));
+                            cards = cards.concat(moreinset.data);
+                            var cardnames = createBooster(cards);
+                            setActivity(cardnames);
+                            if (isSetReleased(setData.released_at) == true) {
+                                console.log("Set is released");
+                                message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at));
+                            } else {
+                                console.log("set is not released");
+                                message.channel.send(new Discord.RichEmbed().setDescription("This set has not been release yet and for spoiler reasons you have to use the scryfall link to see the generated booster.").setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
                             }
-                        }
-                        common = shuffleArray(common);
-                        uncommon = shuffleArray(uncommon);
-                        rare = shuffleArray(rare);
-                        mythic = shuffleArray(mythic);
-                        var booster = common.slice(0,10);
-                        booster = booster.concat(uncommon.slice(0,3));
-                        if (Math.floor(Math.random() * 7) == 0) {
-                            booster = booster.concat(mythic.slice(0,1));
-                        } else {
-                            booster = booster.concat(rare.slice(0,1));
-                        }
-                        var cardnames = [];
-                        for (card of booster) {
-                            cardnames.push(card.name);
-                        }
-                        cardnames.push(getBasicLand());
+                            log(message.author.id + " generated a " + setData.name + "-booster");
+                        });
+                    } else {
+                        var cardnames = createBooster(cards);
                         setActivity(cardnames);
                         if (isSetReleased(setData.released_at) == true) {
                             console.log("Set is released");
@@ -150,49 +171,11 @@ function generateBoosterFromScryfall(message, set, amount = 14) {
                             message.channel.send(new Discord.RichEmbed().setDescription("This set has not been release yet and for spoiler reasons you have to use the scryfall link to see the generated booster.").setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
                         }
                         log(message.author.id + " generated a " + setData.name + "-booster");
-                    });
+                    }
                 } else {
-                    for (card of cards) {
-                        if (card.rarity == "common") {
-                            common.push(card);
-                        } else if(card.rarity == "uncommon") {
-                            uncommon.push(card);
-                        } else if (card.rarity == "rare") {
-                            rare.push(card);
-                        } else if (card.rarity == "mythic") {
-                            mythic.push(card);
-                        }
-                    }
-                    common = shuffleArray(common);
-                    uncommon = shuffleArray(uncommon);
-                    rare = shuffleArray(rare);
-                    mythic = shuffleArray(mythic);
-                    var booster = common.slice(0,10);
-                    booster = booster.concat(uncommon.slice(0,3));
-                    if (Math.floor(Math.random() * 7) == 0) {
-                        booster = booster.concat(mythic.slice(0,1));
-                    } else {
-                        booster = booster.concat(rare.slice(0,1));
-                    }
-                    var cardnames = [];
-                    for (card of booster) {
-                        cardnames.push(card.name);
-                    }
-                    cardnames.push(getBasicLand());
-                    setActivity(cardnames);
-                    if (isSetReleased(setData.released_at) == true) {
-                        console.log("Set is released");
-                        message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at));
-                    } else {
-                        console.log("set is not released");
-                        message.channel.send(new Discord.RichEmbed().setDescription("This set has not been release yet and for spoiler reasons you have to use the scryfall link to see the generated booster.").setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
-                    }
-                    log(message.author.id + " generated a " + setData.name + "-booster");
+                    message.channel.send("Something went wrong when trying to fetch cards");
                 }
-            } else {
-                message.channel.send("Something went wrong when trying to fetch cards");
-            }
-        });
+            });
         }
     });
 }
