@@ -130,7 +130,7 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
     request('https://api.scryfall.com/sets/' + set_code, {json: true}, function (error, response, setData) {
         if(setData.card_count < 15) {
             if(setData.card_count >= 1) {                
-                request('https://api.scryfall.com/cards/grn', {json: true}, function(error, response, body){
+                request('https://api.scryfall.com/cards/' + set_code, {json: true}, function(error, response, body){
                     message.channel.send(setData.name + " only contains " + setData.card_count + " cards and can therefore not generate a booster. \nIt will release or was released " + setData.released_at);
                     message.channel.send(new Discord.RichEmbed().setTitle("Check out the set on Scryfall").setURL(setData.scryfall_uri));
                     log("[DEBUG]" + message.author.id + " wanted a " + setData.name + "-booster. the set only contains " + setData.card_count + " cards and can't generate a booster.");
@@ -183,7 +183,7 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
                             log("Adding set " + setData.name + " to cache with key: " + set_code);
                         }
                     } else {
-                        message.channel.send("Something went wrong when trying to fetch cards");
+                        message.channel.send("Couldn't find any cards for a booster, " + setData.name + " might not have been released in boosters. Choose another set and try again or check out the set on scryfall.\n" + setData.scryfall_uri);
                     }
                 });
             }
