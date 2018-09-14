@@ -147,7 +147,13 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
                 var cardnames = createBooster(cached_set);
                 message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at));
             } else {
-                request('https://api.scryfall.com/cards/search?unique=cards&q=e%3A' + set_code + '+is%3Abooster+-t%3Abasic', {json: true}, function (error, response, body) {
+                var isBooster = "+is%3Abooster";
+                if(isSetReleased(setData.released_at) == false) {
+                    isBooster = "";
+                }
+                var scryfallSearchUri = "https://api.scryfall.com/cards/search?unique=cards&q=e%3A" + set_code + isBooster + "+-t%3Abasic";
+                log(scryfallSearchUri);
+                request(scryfallSearchUri, {json: true}, function (error, response, body) {
                     var set = JSON.parse(JSON.stringify(body));
                     var next_page = "";
                     let cards = set.data;
@@ -162,7 +168,7 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
                                 if (isSetReleased(setData.released_at) == true) {
                                     message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at));
                                 } else {
-                                    message.channel.send(new Discord.RichEmbed().setDescription("This set has not been release yet and for spoiler reasons you have to use the scryfall link to see the generated booster.").setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
+                                    message.channel.send(new Discord.RichEmbed().setDescription("This set has not been release yet and for spoiler reasons you have to use the scryfall link to see the generated booster. The pack can contain any currently spoiled card, including promos and planeswalker deck cards.").setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
                                 }
                                 log(message.author.id + " generated a " + setData.name + "-booster");
                             });
@@ -174,7 +180,7 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
                                 message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at));
                             } else {
                                 console.log("set is not released");
-                                message.channel.send(new Discord.RichEmbed().setDescription("This set has not been release yet and for spoiler reasons you have to use the scryfall link to see the generated booster.").setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
+                                message.channel.send(new Discord.RichEmbed().setDescription("This set has not been release yet and for spoiler reasons you have to use the scryfall link to see the generated booster. The pack can contain any currently spoiled card, including promos and planeswalker deck cards.").setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
                             }
                             log(message.author.id + " generated a " + setData.name + "-booster");
                         }
@@ -182,7 +188,7 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
                             cache.put(set_code, cards, 604800000);
                             log("Adding set " + setData.name + " to cache with key: " + set_code);
                         }
-                    } else if(body.status = 400) {
+                    } else if(body.status == 400) {
                         message.channel.send(set_code + " did not result in any hits.");
                         log("[DEBUG] Could not find set with set code: " + set_code);
                     } else {
