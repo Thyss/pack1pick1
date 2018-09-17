@@ -15,7 +15,11 @@ if(process.env.PROD !== "true") {
 const client = new Discord.Client();
 
 client.on("ready", () => {
-    console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
+    console.log("The P1P1 bot is online!");
+    console.log("Bot is located in these servers: ");
+    client.guilds.forEach(element => {
+        console.log(element.name + " - " + element.id + " - users: "+ element.memberCount);
+    });
 });
 
 function log(event) {
@@ -282,6 +286,10 @@ If you can not see the boosters, check your discord settings if you have disable
 \n \
 Disclaimer: Some sets are not represented properly, like Dominaria f.ex is missing its guaranteed legendary. This is being worked on as it pops up, feel free to report any set that is not working as it should."
         );
+    } else if (message.content.startsWith("!whereisp1p1!")) {
+        client.guilds.forEach(element => {
+            message.channel.send(element.name + " - users: "+ element.memberCount);
+        });
     }
     else if (message.content.startsWith("!p1p1")) {
         var set = message.content.substr(message.content.length -3).toLowerCase();
