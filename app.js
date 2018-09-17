@@ -2,9 +2,11 @@ var fs = require("fs");
 const Discord = require("discord.js");
 var request = require('request');
 var cache = require('memory-cache');
+var pckg = require('./package.json');
 
 //Global tag for the set searched for, used for lands f.ex
 var setTag;
+var p1p1version = pckg.version;
 
 if(process.env.PROD !== "true") {
     require('dotenv').load();
@@ -253,9 +255,11 @@ client.on("message", (message) => {
     }
     else if (message.content.startsWith("!p1p1 about")) {
         message.channel.send("\
-            This bot was made to generate booster packs and discuss what to pick first in packs. More sets will be available as i add them, feel free to come with feedback on what sets you would like to see supported. \n \n Author: Martin Ekström \n Discord username: <@228197875308429313> \n Support development by donating: https://www.paypal.me/yunra \n \
+            This bot was made to generate booster packs and discuss what to pick first in packs. Most sets that were released in boosters in Magics 25 year history is supported. Some sets that have more or replaced basic lands might be misrepresented for now. \n \n Author: Martin Ekström \n Discord username: <@228197875308429313> \n Support development by donating: https://www.paypal.me/yunra \n \
     \n \
-Contributors: Omniczech sorted out the integration with CubeTutor");
+Contributors: Omniczech sorted out the integration with CubeTutor \n \
+\n \
+Current version: " + p1p1version);
     }
     else if (message.content.startsWith("!p1p1 help")) {
         message.channel.send("**Help section for Pack1Pick1-bot** \n \n \
