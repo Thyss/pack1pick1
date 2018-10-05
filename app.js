@@ -60,9 +60,11 @@ function isSetReleased(releasedate) {
     var d = today.getDay();
     
     var todayYMD = new Date(y,m,d);
+    todayYMD.setHours(0,0,0,0);
     var released_at = new Date(releasedate);
+    released_at.setHours(0,0,0,0);
     var released = false;
-    if (todayYMD <= released_at) {
+    if (todayYMD < released_at) {
         release = false;
     } else {
         released = true;
