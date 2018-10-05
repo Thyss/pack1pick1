@@ -167,7 +167,7 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
                 if(isSetReleased(setData.released_at) == false) {
                     isBooster = "";
                 }
-                var scryfallSearchUri = "https://api.scryfall.com/cards/search?unique=cards&q=e%3A" + set_code + isBooster + "+-t%3Abasic";
+                var scryfallSearchUri = "https://api.scryfall.com/cards/search?unique=cards&q=e%3A" + set_code + isBooster + "+-t%3Abasic+-t%3Agate";
                 request(scryfallSearchUri, {json: true}, function (error, response, body) {
                     var set = JSON.parse(JSON.stringify(body));
                     var next_page = "";
