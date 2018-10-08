@@ -4,6 +4,7 @@ var request = require('request');
 var cache = require('memory-cache');
 var pckg = require('./package.json');
 var utils = require('./utils.js');
+var swDestiny = require('./starwarsdestiny.js');
 
 //Global tag for the set searched for, used for lands f.ex
 var setTag;
@@ -245,8 +246,10 @@ client.on("message", (message) => {
           message.channel.send(new Discord.RichEmbed().setDescription("The ID you entered is invalid").setTitle("Error"));
           utils.log("[DEBUG] " + message.author.id + " tried to generate a booster from a cardtutor list with id: " + ctID);
         }
-    }
-    else if (message.content.startsWith("!p1p1 about")) {
+    } else if (message.content.startsWith("!p1p1swd")) {
+        var set = message.content.split(" ");
+        swDestiny.getSwdBooster(set[1], message);
+    } else if (message.content.startsWith("!p1p1 about")) {
         message.channel.send("\
             This bot was made to generate booster packs and discuss what to pick first in packs. Most sets that were released in boosters in Magics 25 year history is supported. Some sets that have more or replaced basic lands might be misrepresented for now. \n \n Author: Martin Ekström \n Discord username: <@228197875308429313> \n Support development by donating: https://www.paypal.me/yunra \n \
     \n \
