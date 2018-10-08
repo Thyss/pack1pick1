@@ -1,15 +1,22 @@
 # pack1pick1
 This Discord Bot was made to practice and discuss first picks in drafts.
-It supports every single set that is available on Scryfall.
+It supports every set available on Scryfall.com for Magic: the Gathering.
+It supports every set available on swdestinydb.com for Star Wars Destiny.
 
 ## Commands
 !p1p1 help
 
 !p1p1 about
 
+### Magic: The Gathering
 !p1p1 paupercube
 
 !p1p1 {setcode}
+
+!p1p1 ct {id}
+
+### Star Wars Destiny
+!p1p1swd {setcode}
 
 ## Local development
 Create a ".env" file in the root directory and add a line for "discord_token=XXXXX"
