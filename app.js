@@ -186,7 +186,7 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
                             utils.log(message.author.id + " generated a " + setData.name + "-booster");
                         }
                         if (isSetReleased(setData.released_at) == true) {
-                            cache.put(set_code, cards, 2592000000);
+                            cache.put(set_code, cards, 604800000);
                             utils.log("Adding set " + setData.name + " to cache with key: " + set_code);
                         }
                     } else if(body.status == 400) {
