@@ -5,6 +5,7 @@ var cache = require('memory-cache');
 var pckg = require('./package.json');
 var utils = require('./utils.js');
 var swDestiny = require('./starwarsdestiny.js');
+var magicTcg = require('./magicthegathering.js');
 
 //Global tag for the set searched for, used for lands f.ex
 var setTag;
@@ -47,16 +48,9 @@ function getCardsFromCT(response, amount) {
 //Check if a set is released by comparing the releasedate with todays date
 function isSetReleased(releasedate) {
     var today = new Date();
-    var y = today.getFullYear();
-    var m = today.getMonth();
-    var d = today.getDay();
-    
-    var todayYMD = new Date(y,m,d);
-    todayYMD.setHours(0,0,0,0);
     var released_at = new Date(releasedate);
-    released_at.setHours(0,0,0,0);
     var released = false;
-    if (todayYMD < released_at) {
+    if (today < released_at) {
         release = false;
     } else {
         released = true;
@@ -149,7 +143,7 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
                 var cached_set = cache.get(set_code);
                 utils.log(setData.name + " was found in the cache");
                 var cardnames = createBooster(cached_set);
-                message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at));
+                message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at));
             } else {
                 var isBooster = "+is%3Abooster";
                 if(isSetReleased(setData.released_at) == false) {
@@ -168,10 +162,11 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
                                 cards = cards.concat(moreinset.data);
                                 var cardnames = createBooster(cards);
                                 utils.setActivity(cardnames, client);
+                                console.log(setData.icon_svg_uri);
                                 if (isSetReleased(setData.released_at) == true) {
-                                    message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at));
+                                    message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at).setImage("https://img.scryfall.com/sets/grn.svg?1539576000"));
                                 } else {
-                                    message.channel.send(new Discord.RichEmbed().setDescription("This set has not been release yet and for spoiler reasons you have to use the scryfall link to see the generated booster. The pack can contain any currently spoiled card, including promos and planeswalker deck cards.").setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
+                                    message.channel.send(new Discord.RichEmbed().setDescription("This set has not been release yet and for spoiler reasons you have to use the scryfall link to see the generated booster. The pack can contain any currently spoiled card, including promos and planeswalker deck cards.").setImage(packaging).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
                                 }
                                 utils.log(message.author.id + " generated a " + setData.name + "-booster");
                             });
@@ -179,14 +174,14 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
                             var cardnames = createBooster(cards);
                             utils.setActivity(cardnames, client);
                             if (isSetReleased(setData.released_at) == true) {
-                                message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at));
+                                message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at).setImage("https://img.scryfall.com/sets/grn.svg?1539576000"));
                             } else {
                                 message.channel.send(new Discord.RichEmbed().setDescription("This set has not been release yet and for spoiler reasons you have to use the scryfall link to see the generated booster. The pack can contain any currently spoiled card, including promos and planeswalker deck cards.").setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
                             }
                             utils.log(message.author.id + " generated a " + setData.name + "-booster");
                         }
                         if (isSetReleased(setData.released_at) == true) {
-                            cache.put(set_code, cards, 604800000);
+                            cache.put(set_code, cards);
                             utils.log("Adding set " + setData.name + " to cache with key: " + set_code);
                         }
                     } else if(body.status == 400) {
@@ -238,6 +233,7 @@ client.on("message", (message) => {
                       body2 = body.replace(a, '\n').replace(a2, '').replace(script, '').replace(p, '').replace(li, '').replace(div1, '').replace(div2, '').replace(head, '').replace(headAlt, '').replace(closer, '')
                       let booster = getCardsFromCT(body2, 15);
                       var scryfalllink = createScryfallLink(booster, "name");
+                      utils.setActivity(booster, client);
 
                       message.channel.send(new Discord.RichEmbed().setDescription(booster).setURL(scryfalllink).setTitle(title));
                       utils.log(message.author.id + " generated a booster from a cardtutor list with id: " + ctID);
@@ -248,7 +244,7 @@ client.on("message", (message) => {
         }
     } else if (message.content.startsWith("!p1p1swd")) {
         var set = message.content.split(" ");
-        swDestiny.getSwdBooster(set[1], message);
+        swDestiny.getSwdBooster(set[1], message, client);
     } else if (message.content.startsWith("!p1p1 about")) {
         message.channel.send("\
             This bot was made to generate booster packs and discuss what to pick first in packs. Most sets that were released in boosters in Magics 25 year history is supported. Some sets that have more or replaced basic lands might be misrepresented for now. \n \n Author: Martin Ekström \n Discord username: <@228197875308429313> \n Support development by donating: https://www.paypal.me/yunra \n \
@@ -292,6 +288,10 @@ Disclaimer: Some sets are not represented properly, like Dominaria f.ex is missi
                 generateBoosterFromScryfall(message, set, 14);
             }
         });
+    } else if (message.content.startsWith("!planarchaos roll")) {
+        var planarcard = magicTcg.rollForPlanes(message);
+    } else if (message.content.startsWith("!planarchaos")) {
+        var planarcard = magicTcg.getPlanarCard(message);
     }
 });
 

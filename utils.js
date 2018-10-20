@@ -15,5 +15,8 @@ module.exports = {
     },
     log: function log(event) {
         console.log("[" + new Date() + "] " + event);
+    },
+    setActivityCard: function (cardname, client) {
+        client.user.setActivity(cardname, { type: 'PLAYING'});
     }
 };

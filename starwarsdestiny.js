@@ -39,7 +39,7 @@ function createBooster(setData) {
 }
 
  module.exports = {
-     getSwdBooster: function getSwdBooster(setCode, message) {
+     getSwdBooster: function getSwdBooster(setCode, message, client) {
         if (cache.get("swd_" + setCode)) {
             utils.log("swd_" + setCode + " was found in the cache");
             var booster = createBooster(cache.get("swd_" + setCode));
@@ -49,6 +49,7 @@ function createBooster(setData) {
                 cardnames.push(card.name);
                 if(card.rarity_name == "Rare" || card.rarity_name == "Legendary") {
                     cardimage = card.imagesrc;
+                    utils.setActivityCard(card.name, client);
                 }
             }
             message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle("Star Wars Destiny Booster").setFooter("Want visuals? http://swdestinydb.com").setImage(cardimage));
