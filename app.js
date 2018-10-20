@@ -290,6 +290,8 @@ Disclaimer: Some sets are not represented properly, like Dominaria f.ex is missi
         });
     } else if (message.content.startsWith("!planarchaos roll")) {
         var planarcard = magicTcg.rollForPlanes(message);
+    } else if (message.content.startsWith("!planarchaos rules")) {
+        message.channel.send("https://magic.wizards.com/en/articles/archive/feature/rules-revealed-2009-08-10");
     } else if (message.content.startsWith("!planarchaos")) {
         var planarcard = magicTcg.getPlanarCard(message);
     }
