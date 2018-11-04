@@ -266,19 +266,34 @@ It is a set of numbers, just copy it and replace <ct> in the command above.\n \
 \n \
 !p1p1 paupercube - Generate a 15 card booster pack for thepaupercube.com \n \
 !p1p1 brewchallenge - You get 1 randomly picked card and have to build a deck around it. \n \
+!p1p1planechase - Get a planechase card. \n \
+!p1p1planechase roll - Roll the chaos die \n \
+\n \
+Star Wars Destiny booster:\n \
+!p1p1swd wotf - Gets a Way of the Force booster pack from Star Wars Destiny (change code to get other sets) \n \
 \n \
 **!p1p1 about - Learn more about the bot.** \n \
 !p1p1 help - Displays this info, its literally the command you just used. \n \
+\n \
+Want to support the bot? Feel free to use the donate link in the \"!p1p1 about\" section.\n \
 \n \
 If you can not see the boosters, check your discord settings if you have disabled link previews. \n \
 \n \
 Disclaimer: Some sets are not represented properly, like Dominaria f.ex is missing its guaranteed legendary. This is being worked on as it pops up, feel free to report any set that is not working as it should."
         );
     } else if (message.content.startsWith("!whereisp1p1!")) {
+        var servers = [];
         client.guilds.forEach(element => {
-            message.channel.send(element.name + " - users: "+ element.memberCount);
+            servers.push(element.name + " - users: "+ element.memberCount + " - OwnerID: " + element.ownerID);
         });
-    }
+        message.channel.send(servers);
+    } else if (message.content.startsWith("!p1p1planechase roll")) {
+        var planarcard = magicTcg.rollForPlanes(message);
+    } else if (message.content.startsWith("!p1p1planechase rules")) {
+        message.channel.send("https://magic.wizards.com/en/articles/archive/feature/rules-revealed-2009-08-10");
+    } else if (message.content.startsWith("!p1p1planechase")) {
+        var planarcard = magicTcg.getPlanarCard(message);
+    } 
     else if (message.content.startsWith("!p1p1")) {
         var set = message.content.substr(message.content.length -3).toLowerCase();
         request('https://api.scryfall.com/sets/' + set, {json: true}, function (error, response, setData) {
@@ -288,12 +303,6 @@ Disclaimer: Some sets are not represented properly, like Dominaria f.ex is missi
                 generateBoosterFromScryfall(message, set, 14);
             }
         });
-    } else if (message.content.startsWith("!planarchaos roll")) {
-        var planarcard = magicTcg.rollForPlanes(message);
-    } else if (message.content.startsWith("!planarchaos rules")) {
-        message.channel.send("https://magic.wizards.com/en/articles/archive/feature/rules-revealed-2009-08-10");
-    } else if (message.content.startsWith("!planarchaos")) {
-        var planarcard = magicTcg.getPlanarCard(message);
     }
 });
 
