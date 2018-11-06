@@ -18,5 +18,8 @@ module.exports = {
     },
     setActivityCard: function (cardname, client) {
         client.user.setActivity(cardname, { type: 'PLAYING'});
+    },
+    rollDice: function (max) {
+        return Math.floor(Math.random() * max +1);
     }
 };

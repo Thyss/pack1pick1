@@ -293,7 +293,10 @@ Disclaimer: Some sets are not represented properly, like Dominaria f.ex is missi
         message.channel.send("https://magic.wizards.com/en/articles/archive/feature/rules-revealed-2009-08-10");
     } else if (message.content.startsWith("!p1p1planechase")) {
         var planarcard = magicTcg.getPlanarCard(message);
-    } 
+    } else if (message.content.startsWith("!p1p1 roll")) {
+        var maxNumber = message.content.split(" ");
+        message.channel.send("Dice landed on: " + utils.rollDice(maxNumber[2]));
+    }
     else if (message.content.startsWith("!p1p1")) {
         var set = message.content.substr(message.content.length -3).toLowerCase();
         request('https://api.scryfall.com/sets/' + set, {json: true}, function (error, response, setData) {
