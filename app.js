@@ -166,7 +166,7 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
                                 if (isSetReleased(setData.released_at) == true) {
                                     message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at).setImage("https://img.scryfall.com/sets/grn.svg?1539576000"));
                                 } else {
-                                    message.channel.send(new Discord.RichEmbed().setDescription("This set has not been release yet and for spoiler reasons you have to use the scryfall link to see the generated booster. The pack can contain any currently spoiled card, including promos and planeswalker deck cards.").setImage(packaging).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
+                                    message.channel.send(new Discord.RichEmbed().setDescription("This set has not been released yet and for spoiler reasons you have to use the scryfall link to see the generated booster. The pack can contain any currently spoiled card, including promos and planeswalker deck cards.").setImage(packaging).setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
                                 }
                                 utils.log(message.author.id + " generated a " + setData.name + "-booster");
                             });
@@ -174,9 +174,9 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
                             var cardnames = createBooster(cards);
                             utils.setActivity(cardnames, client);
                             if (isSetReleased(setData.released_at) == true) {
-                                message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at).setImage("https://img.scryfall.com/sets/grn.svg?1539576000"));
+                                message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at).setImage("https://img.scryfall.com/sets/grn.svg?1539576000"));
                             } else {
-                                message.channel.send(new Discord.RichEmbed().setDescription("This set has not been release yet and for spoiler reasons you have to use the scryfall link to see the generated booster. The pack can contain any currently spoiled card, including promos and planeswalker deck cards.").setTitle(amount + " cards from " + setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
+                                message.channel.send(new Discord.RichEmbed().setDescription("This set has not been released yet and for spoiler reasons you have to use the scryfall link to see the generated booster. The pack can contain any currently spoiled card, including promos and planeswalker deck cards.").setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
                             }
                             utils.log(message.author.id + " generated a " + setData.name + "-booster");
                         }
@@ -268,6 +268,9 @@ It is a set of numbers, just copy it and replace <ct> in the command above.\n \
 !p1p1 brewchallenge - You get 1 randomly picked card and have to build a deck around it. \n \
 !p1p1planechase - Get a planechase card. \n \
 !p1p1planechase roll - Roll the chaos die \n \
+\n \
+!p1p1 roll 6 - Roll a d6 dice \n \
+!p1p1 roll 20 - Roll a d20 dice \n \
 \n \
 Star Wars Destiny booster:\n \
 !p1p1swd wotf - Gets a Way of the Force booster pack from Star Wars Destiny (change code to get other sets) \n \
