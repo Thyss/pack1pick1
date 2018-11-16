@@ -10,6 +10,7 @@ var magicTcg = require('./magicthegathering.js');
 //Global tag for the set searched for, used for lands f.ex
 var setTag;
 var p1p1version = pckg.version;
+var packvalue;
 
 if(process.env.PROD !== "true") {
     require('dotenv').load();
@@ -114,8 +115,12 @@ function createBooster(set, mythicrares = 1, uncommons = 3, commons = 10) {
         booster = booster.concat(rare.slice(0,mythicrares));
     }
     var cardnames = [];
+    packvalue = 0;
     for (card of booster) {
         cardnames.push(card.name);
+        if (parseInt(card.usd) > packvalue) {
+            packvalue = parseInt(card.usd);
+        }
     }
     cardnames.push(getBasicLand());
     return cardnames;
@@ -143,7 +148,13 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
                 var cached_set = cache.get(set_code);
                 utils.log(setData.name + " was found in the cache");
                 var cardnames = createBooster(cached_set);
-                message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at));
+                var footer = "";
+                if (packvalue >= 10) {
+                    footer = "A card in this pack is worth $" + packvalue + " - " + setData.name + " was released " + setData.released_at;
+                } else {
+                    footer = setData.name + " was released " + setData.released_at;
+                }
+                message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(footer));
             } else {
                 var isBooster = "+is%3Abooster";
                 if(isSetReleased(setData.released_at) == false) {
@@ -162,9 +173,14 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
                                 cards = cards.concat(moreinset.data);
                                 var cardnames = createBooster(cards);
                                 utils.setActivity(cardnames, client);
-                                console.log(setData.icon_svg_uri);
                                 if (isSetReleased(setData.released_at) == true) {
-                                    message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at).setImage("https://img.scryfall.com/sets/grn.svg?1539576000"));
+                                    var footer = "";
+                                    if (packvalue >= 10) {
+                                            footer = "A card in this pack is worth $" + packvalue + " - " + setData.name + " was released " + setData.released_at;
+                                    } else {
+                                        footer = setData.name + " was released " + setData.released_at;
+                                    }
+                                    message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(footer));
                                 } else {
                                     message.channel.send(new Discord.RichEmbed().setDescription("This set has not been released yet and for spoiler reasons you have to use the scryfall link to see the generated booster. The pack can contain any currently spoiled card, including promos and planeswalker deck cards.").setImage(packaging).setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
                                 }
@@ -174,7 +190,13 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
                             var cardnames = createBooster(cards);
                             utils.setActivity(cardnames, client);
                             if (isSetReleased(setData.released_at) == true) {
-                                message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " was released " + setData.released_at).setImage("https://img.scryfall.com/sets/grn.svg?1539576000"));
+                                var footer = "";
+                                if (packvalue >= 10) {
+                                    footer = "A card in this pack is worth $" + packvalue + " - " + setData.name + " was released " + setData.released_at;
+                                } else {
+                                    footer = setData.name + " was released " + setData.released_at;
+                                }
+                                message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(footer));
                             } else {
                                 message.channel.send(new Discord.RichEmbed().setDescription("This set has not been released yet and for spoiler reasons you have to use the scryfall link to see the generated booster. The pack can contain any currently spoiled card, including promos and planeswalker deck cards.").setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
                             }
