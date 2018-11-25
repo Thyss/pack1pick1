@@ -182,7 +182,7 @@ function generateBoosterFromScryfall(message, set_code, amount = 14) {
                                     }
                                     message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(footer));
                                 } else {
-                                    message.channel.send(new Discord.RichEmbed().setDescription("This set has not been released yet and for spoiler reasons you have to use the scryfall link to see the generated booster. The pack can contain any currently spoiled card, including promos and planeswalker deck cards.").setImage(packaging).setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
+                                    message.channel.send(new Discord.RichEmbed().setDescription("This set has not been released yet and for spoiler reasons you have to use the scryfall link to see the generated booster. The pack can contain any currently spoiled card, including promos and planeswalker deck cards.").setTitle(setData.name).setURL(createScryfallLink(cardnames, "rarity", setData.code)).setFooter(setData.name + " will be released " + setData.released_at));
                                 }
                                 utils.log(message.author.id + " generated a " + setData.name + "-booster");
                             });
