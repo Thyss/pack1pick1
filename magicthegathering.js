@@ -125,8 +125,6 @@ function getOneRandomCard(setData) {
             var card = common.slice(0,1);
         }
 
-        console.log("FOIL: " + card[0].name + " Randnum = " + randomNumber);
-
         return card;
     },
     containsFoil: function(setCode) {
