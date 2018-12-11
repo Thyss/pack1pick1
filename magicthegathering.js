@@ -65,12 +65,7 @@ function getOneRandomCard(setData) {
         rare = utils.shuffleArray(rare);
         mythic = utils.shuffleArray(mythic);
         var booster = [];
-        if (this.containsFoil(set[0].set)) {
-            commons = commons -1;
-            booster = common.slice(0,commons);
-        } else {
-            booster = common.slice(0,commons);
-        }
+        booster = common.slice(0,commons);
         booster = booster.concat(uncommon.slice(0,uncommons));
         
         if (Math.floor(Math.random() * 7) == 0) {
@@ -86,8 +81,13 @@ function getOneRandomCard(setData) {
                 packvalue = parseInt(card.usd);
             }
         }
-        cardnames = this.addFoilToCardnames(cardnames, set);
-        cardnames.push(module.exports.getBasicLand());
+
+        // Replace basic land with foil
+        if (this.containsFoil(set[0].set)) {
+            cardnames = this.addFoilToCardnames(cardnames, set);
+        } else {
+            cardnames.push(module.exports.getBasicLand());
+        }
         return cardnames;
     },
     getFoilCard: function(set) {
