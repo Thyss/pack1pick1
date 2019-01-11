@@ -150,7 +150,7 @@ function getOneRandomCard(setData) {
         var ravnicaAllegianceGuildGates = ["Azorius Guildgate", "Gruul Guildgate", "Orzhov Guildgate", "Rakdos Guildgate", "Simic Guildgate"];
         if (setTag == "grn") {
             lands = ravnicaGuildGates;
-        } if (setTag == "sdfsdf") {
+        } if (setTag == "rna") {
             lands = ravnicaAllegianceGuildGates;
         }
         var shuffledBasics = utils.shuffleArray(lands);
