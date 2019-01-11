@@ -147,8 +147,11 @@ function getOneRandomCard(setData) {
     getBasicLand: function(amount = 1) {
         var lands = ["Plains", "Island", "Swamp", "Mountain", "Forest"];
         var ravnicaGuildGates = ["Boros Guildgate", "Dimir Guildgate", "Selesnya Guildgate", "Izzet Guildgate", "Golgari Guildgate"];
+        var ravnicaAllegianceGuildGates = ["Azorius Guildgate", "Gruul Guildgate", "Orzhov Guildgate", "Rakdos Guildgate", "Simic Guildgate"];
         if (setTag == "grn") {
             lands = ravnicaGuildGates;
+        } if (setTag == "sdfsdf") {
+            lands = ravnicaAllegianceGuildGates;
         }
         var shuffledBasics = utils.shuffleArray(lands);
         return shuffledBasics.slice(0, amount);
