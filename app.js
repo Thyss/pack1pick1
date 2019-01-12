@@ -123,15 +123,12 @@ It is a set of numbers, just copy it and replace <ct> in the command above.\n \
 Star Wars Destiny booster:\n \
 !p1p1swd wotf - Gets a Way of the Force booster pack from Star Wars Destiny (change code to get other sets) \n \
 \n \
-**!p1p1 about - Learn more about the bot.** \n \
+!p1p1 about - Learn more about the bot. \n \
 !p1p1 help - Displays this info, its literally the command you just used. \n \
 \n \
-Want to support the bot? Feel free to use the donate link in the \"!p1p1 about\" section.\n \
+**patreon.com/yunra** - please help support the development of the bot\n \
 \n \
-If you can not see the boosters, check your discord settings if you have disabled link previews. \n \
-\n \
-Disclaimer: Some sets are not represented properly, like Dominaria f.ex is missing its guaranteed legendary. This is being worked on as it pops up, feel free to report any set that is not working as it should."
-        );
+If you can not see the boosters, check your discord settings if you have disabled link previews.");
     } else if (message.content.startsWith("!whereisp1p1!")) {
         var servers = [];
         client.guilds.forEach(element => {
