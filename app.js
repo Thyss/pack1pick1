@@ -135,6 +135,10 @@ If you can not see the boosters, check your discord settings if you have disable
             servers.push(element.name + " - users: "+ element.memberCount + " - OwnerID: " + element.ownerID);
         });
         message.channel.send(servers);
+    } else if (message.content.startsWith("!p1p1 momir")) {
+        console.log("MOMIR!");
+        var splitMessage = message.content.split(" ");
+        magicTcg.momir(splitMessage[2], message);
     } else if (message.content.startsWith("!p1p1planechase roll")) {
         var planarcard = magicTcg.rollForPlanes(message);
     } else if (message.content.startsWith("!p1p1planechase rules")) {
