@@ -136,7 +136,6 @@ If you can not see the boosters, check your discord settings if you have disable
         });
         message.channel.send(servers);
     } else if (message.content.startsWith("!p1p1 momir")) {
-        console.log("MOMIR!");
         var splitMessage = message.content.split(" ");
         magicTcg.momir(splitMessage[2], message);
     } else if (message.content.startsWith("!p1p1planechase roll")) {

@@ -34,8 +34,12 @@ function getOneRandomCard(setData) {
      },
      momir: function(cmc, message) {
         request('https://api.scryfall.com/cards/search?unique=cards&q=cmc:' + cmc + '+type:creature', {json: true}, function (error, response, setData) {
-            var card = getOneRandomCard(setData.data);
-            message.channel.send(new Discord.RichEmbed().setTitle("Momir: " + card.name).setImage(card.image_uris['normal']).setURL(card.scryfall_uri).setFooter("patreon.com/yunra"));
+            if (setData.status != 404) {
+                var card = getOneRandomCard(setData.data);
+                message.channel.send(new Discord.RichEmbed().setTitle("Momir: " + card.name).setImage(card.image_uris['normal']).setURL(card.scryfall_uri).setFooter("patreon.com/yunra"));
+            } else {
+                message.channel.send("Couldn't find any creature with Converted Mana Cost " + cmc);
+            }
         });
      },
      rollForPlanes: function(message) {
