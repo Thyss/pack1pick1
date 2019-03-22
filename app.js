@@ -57,6 +57,7 @@ client.on("message", (message) => {
         if (message.content.startsWith("!p1p1 paupercube") || message.content.startsWith("!paupercube")) {
             ctID = "96198";
             title = "15 cards from thepaupercube.com";
+            utils.setActivityCard("thepaupercube.com", client)
         }
         if (/^[0-9]*$/.test(ctID)){
           let options = {
@@ -83,7 +84,7 @@ client.on("message", (message) => {
                       var scryfalllink = magicTcg.createScryfallLink(booster, "name");
                       utils.setActivity(booster, client);
 
-                      message.channel.send(new Discord.RichEmbed().setDescription(booster).setURL(scryfalllink).setTitle(title));
+                      message.channel.send(new Discord.RichEmbed().setDescription(booster).setURL(scryfalllink).setTitle(title).setFooter("patreon.com/yunra"));
                       utils.log(message.author.id + " generated a booster from a cardtutor list with id: " + ctID);
           });
         } else {
