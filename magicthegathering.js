@@ -83,6 +83,14 @@ function getOneRandomCard(setData) {
         } else {
             booster = booster.concat(rare.slice(0,mythicrares));
         }
+
+        //Replace a common with a special type of card
+        if (setTag == "dom") {
+            booster = this.replaceBasicWithCard(set, "Legendary", booster);
+        } if (setTag == "war") {
+            booster = this.replaceBasicWithCard(set, "Planeswalker", booster);
+        }
+
         var cardnames = [];
         packvalue = 0;
         for (card of booster) {
@@ -136,6 +144,42 @@ function getOneRandomCard(setData) {
         }
 
         return card;
+    },
+    replaceBasicWithCard: function(set, cardtype, booster) {
+        var containsCorrectCard = false;
+        for (card of booster) {
+            if (card.type_line.includes(cardtype) && !containsCorrectCard) {
+                containsCorrectCard = true;
+                break;
+            }
+        }
+        if (!containsCorrectCard) {
+            var cardsOfType = [];
+            for (card of set) {
+                if (card.type_line.includes(cardtype)) {
+                    cardsOfType.push(card);
+                }
+            }
+            var cardsOfCardtype = utils.shuffleArray(cardsOfType);
+
+            var replaced = false;
+            for (card of booster) {
+                const index = booster.indexOf(card.name);
+                if (!replaced) {
+                    if(card.rarity === "common") {
+                        booster.splice(booster, 1);
+                        replaced = true;
+                        utils.log("Legendary card added with name: " + card.name);
+                        break;
+                    }
+                }
+            }
+
+            var cardOfType = cardsOfCardtype.slice(0,1);
+            booster = booster.concat(cardOfType);
+            return booster;
+        }
+        return booster;
     },
     containsFoil: function(setCode) {
         if (setCode == "uma") {
