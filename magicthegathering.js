@@ -169,7 +169,6 @@ function getOneRandomCard(setData) {
                     if(card.rarity === "common") {
                         booster.splice(booster, 1);
                         replaced = true;
-                        utils.log("Legendary card added with name: " + card.name);
                         break;
                     }
                 }
@@ -202,10 +201,13 @@ function getOneRandomCard(setData) {
         var lands = ["Plains", "Island", "Swamp", "Mountain", "Forest"];
         var ravnicaGuildGates = ["Boros Guildgate", "Dimir Guildgate", "Selesnya Guildgate", "Izzet Guildgate", "Golgari Guildgate"];
         var ravnicaAllegianceGuildGates = ["Azorius Guildgate", "Gruul Guildgate", "Orzhov Guildgate", "Rakdos Guildgate", "Simic Guildgate"];
+        var coreSet2020Lands = ["Bloodfell Caves", "Blossoming Sands", "Dismal Backwater", "Jungle Hollow", "Rugged Highlands", "Scoured Barrens", "Swiftwater Cliffs", "Thornwood Falls", "Tranquil Cove", "Wind-Scarred Crag"]
         if (setTag == "grn") {
             lands = ravnicaGuildGates;
         } if (setTag == "rna") {
             lands = ravnicaAllegianceGuildGates;
+        } if (setTag == "m20") {
+            lands = coreSet2020Lands;
         }
         var shuffledBasics = utils.shuffleArray(lands);
         return shuffledBasics.slice(0, amount);
