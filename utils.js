@@ -29,6 +29,11 @@ module.exports = {
         } else {
             return text;
         }
+    },
+    removeCardtypeFromList: function (array, cardType) {
+        return array.filter(function(element){
+            return element.type_line !== cardType;
+        });
     }
     
 };
