@@ -60,7 +60,7 @@ function getOneRandomCard(setData) {
         var common = [];
         for (card of set) {
             if (card.rarity == "common") {
-                if (setTag = "m20") {
+                if (setTag == "m20") {
                     common = utils.removeCardtypeFromList(common, "Land");
                 }
                 common.push(card);
@@ -204,7 +204,7 @@ function getOneRandomCard(setData) {
         var lands = ["Plains", "Island", "Swamp", "Mountain", "Forest"];
         var ravnicaGuildGates = ["Boros Guildgate", "Dimir Guildgate", "Selesnya Guildgate", "Izzet Guildgate", "Golgari Guildgate"];
         var ravnicaAllegianceGuildGates = ["Azorius Guildgate", "Gruul Guildgate", "Orzhov Guildgate", "Rakdos Guildgate", "Simic Guildgate"];
-        var coreSet2020Lands = ["Plains", "Island", "Swamp", "Mountain", "Forest", "Bloodfell Caves", "Blossoming Sands", "Dismal Backwater", "Jungle Hollow", "Rugged Highlands", "Scoured Barrens", "Swiftwater Cliffs", "Thornwood Falls", "Tranquil Cove", "Wind-Scarred Crag"]
+        var coreSet2020Lands = ["Plains", "Island", "Swamp", "Mountain", "Forest", "Bloodfell Caves", "Blossoming Sands", "Dismal Backwater", "Evolving Wilds", "Jungle Hollow", "Rugged Highlands", "Scoured Barrens", "Swiftwater Cliffs", "Thornwood Falls", "Tranquil Cove", "Wind-Scarred Crag"]
         if (setTag == "grn") {
             lands = ravnicaGuildGates;
         } if (setTag == "rna") {
