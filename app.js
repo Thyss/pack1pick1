@@ -91,7 +91,34 @@ client.on("message", (message) => {
           message.channel.send(new Discord.RichEmbed().setDescription("The ID you entered is invalid").setTitle("Error"));
           utils.log("[DEBUG] " + message.author.id + " tried to generate a booster from a cardtutor list with id: " + ctID);
         }
-    } else if (message.content.startsWith("!p1p1swd")) {
+    } 
+    else if(message.content.startsWith('!p1p1 cc ')){
+        let ccId =  message.content.replace("!p1p1 cc ", "")
+        request({
+            method:'GET',
+            url: 'https://cubecobra.com/cube/api/p1p1/' + ccId +'/',
+            headers: {
+                "content-type": "application/json",
+                "accept": "application/json"
+            }
+        },
+        function (error, response, body) {
+            if(!error){
+                const parseBody = JSON.parse(body)
+                let booster = parseBody.pack;
+                
+                var scryfalllink = magicTcg.createScryfallLink(booster, "name");
+
+                utils.setActivity(booster, client);
+
+                message.channel.send(new Discord.RichEmbed().setDescription(booster).setURL(scryfalllink).setTitle('Cube Cobra').setFooter("patreon.com/yunra"));
+                utils.log(message.author.id + " generated a booster from a Cube Cobra list with id: " + ccId);
+            } else {
+                message.channel.send(new Discord.RichEmbed().setTitle('Something Went Wrong').setFooter("patreon.com/yunra"));
+            }
+        })
+    }
+    else if (message.content.startsWith("!p1p1swd")) {
         var set = message.content.split(" ");
         swDestiny.getSwdBooster(set[1], message, client);
     } else if (message.content.startsWith("!p1p1 about")) {
