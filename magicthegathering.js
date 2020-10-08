@@ -23,12 +23,12 @@ function getOneRandomCard(setData) {
         if (cache.get(planarchaos)) {
             var setData = cache.get(planarchaos);
             var card = getOneRandomCard(setData);
-            message.channel.send(new Discord.RichEmbed().setTitle(card.name).setDescription(card.oracle_text).setImage(card.image_uris['normal']).setURL(card.scryfall_uri).setFooter("patreon.com/yunra"));
+            message.channel.send(new Discord.RichEmbed().setTitle(card.name).setDescription(card.oracle_text).setImage(card.image_uris['normal']).setURL(card.scryfall_uri).setFooter("paypal.me/yunra"));
         } else {
             request('https://api.scryfall.com/cards/search?unique=cards&q=e%3Aopca+t%3Aplane', {json: true}, function (error, response, setData) {
                 cache.put(planarchaos, setData.data);
                 var card = getOneRandomCard(setData.data);
-                message.channel.send(new Discord.RichEmbed().setTitle(card.name).setDescription(card.oracle_text).setImage(card.image_uris['normal']).setURL(card.scryfall_uri).setFooter("patreon.com/yunra"));
+                message.channel.send(new Discord.RichEmbed().setTitle(card.name).setDescription(card.oracle_text).setImage(card.image_uris['normal']).setURL(card.scryfall_uri).setFooter("paypal.me/yunra"));
             });
         }
      },
@@ -36,7 +36,7 @@ function getOneRandomCard(setData) {
         request('https://api.scryfall.com/cards/search?unique=cards&q=cmc:' + cmc + '+type:creature', {json: true}, function (error, response, setData) {
             if (setData.status != 404) {
                 var card = getOneRandomCard(setData.data);
-                message.channel.send(new Discord.RichEmbed().setTitle("Momir: " + card.name).setImage(card.image_uris['normal']).setURL(card.scryfall_uri).setFooter("patreon.com/yunra"));
+                message.channel.send(new Discord.RichEmbed().setTitle("Momir: " + card.name).setImage(card.image_uris['normal']).setURL(card.scryfall_uri).setFooter("paypal.me/yunra"));
             } else {
                 message.channel.send("Couldn't find any creature with Converted Mana Cost " + cmc);
             }
@@ -226,7 +226,7 @@ function getOneRandomCard(setData) {
                 if(setData.card_count >= 1) {                
                     request('https://api.scryfall.com/cards/' + set_code, {json: true}, function(error, response, body){
                         message.channel.send(setData.name + " only contains " + setData.card_count + " cards and can therefore not generate a booster. \nIt will release or was released " + setData.released_at);
-                        message.channel.send(new Discord.RichEmbed().setTitle("Check out the set on Scryfall").setURL(setData.scryfall_uri).setFooter("patreon.com/yunra"));
+                        message.channel.send(new Discord.RichEmbed().setTitle("Check out the set on Scryfall").setURL(setData.scryfall_uri).setFooter("paypal.me/yunra"));
                         utils.log("[DEBUG]" + message.author.id + " wanted a " + setData.name + "-booster. the set only contains " + setData.card_count + " cards and can't generate a booster.");
                     }); 
                 } else {

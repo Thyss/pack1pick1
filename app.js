@@ -84,7 +84,7 @@ client.on("message", (message) => {
                       var scryfalllink = magicTcg.createScryfallLink(booster, "name");
                       utils.setActivity(booster, client);
 
-                      message.channel.send(new Discord.RichEmbed().setDescription(booster).setURL(scryfalllink).setTitle(title).setFooter("patreon.com/yunra"));
+                      message.channel.send(new Discord.RichEmbed().setDescription(booster).setURL(scryfalllink).setTitle(title).setFooter("paypal.me/yunra"));
                       utils.log(message.author.id + " generated a booster from a cardtutor list with id: " + ctID);
           });
         } else {
@@ -127,7 +127,7 @@ Star Wars Destiny booster:\n \
 !p1p1 about - Learn more about the bot. \n \
 !p1p1 help - Displays this info, its literally the command you just used. \n \
 \n \
-**patreon.com/yunra** - please help support the development of the bot\n \
+**paypal.me/yunra** - please help support the development of the bot\n \
 \n \
 If you can not see the boosters, check your discord settings if you have disabled link previews.");
     } else if (message.content.startsWith("!whereisp1p1!")) {

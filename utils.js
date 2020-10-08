@@ -23,9 +23,9 @@ module.exports = {
         return Math.floor(Math.random() * max +1);
     },
     setPatreonText: function (text) {
-        // 1 of every 6 should include patreon link
+        // 1 of every 6 should include paypal link
         if(Math.floor(Math.random() * 5) == 0) {
-            return "patreon.com/yunra";
+            return "paypal.me/yunra";
         } else {
             return text;
         }

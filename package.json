@@ -1,6 +1,6 @@
 {
   "name": "Pick1Pack1Bot",
-  "version": "1.13.2",
+  "version": "1.13.3",
   "main": "mybot.js",
   "dependencies": {
     "discord.js": "^11.3.2",
