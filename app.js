@@ -55,7 +55,7 @@ client.on("message", (message) => {
         let ctID = message.content.replace("!p1p1 ct ", "")
         var title = "Results from cube with id: " + ctID;
         if (message.content.startsWith("!p1p1 paupercube") || message.content.startsWith("!paupercube")) {
-            ctID = "96198";
+            ctID = "155226";
             title = "15 cards from thepaupercube.com";
             utils.setActivityCard("thepaupercube.com", client)
         }
