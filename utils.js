@@ -32,7 +32,7 @@ module.exports = {
     },
     removeCardtypeFromList: function (array, cardType) {
         return array.filter(function(element){
-            return element.type_line !== cardType;
+            return !element.type_line.includes(cardType);            
         });
     }
     

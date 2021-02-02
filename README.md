@@ -20,6 +20,7 @@ It supports every set available on swdestinydb.com for Star Wars Destiny.
 
 ## Local development
 Create a ".env" file in the root directory and add a line for "discord_token=XXXXX"
+To start the bot locally, run "node app.js"
 
 ## Help out?
 Feel free to contact me about features etc.

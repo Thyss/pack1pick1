@@ -60,9 +60,10 @@ function getOneRandomCard(setData) {
         var common = [];
         for (card of set) {
             if (card.rarity == "common") {
-                if (setTag == "m20") {
+                if (setTag == "m20" || setTag == "khm") {
                     common = utils.removeCardtypeFromList(common, "Land");
                 }
+
                 common.push(card);
             } else if(card.rarity == "uncommon") {
                 uncommon.push(card);
@@ -199,18 +200,21 @@ function getOneRandomCard(setData) {
         }
         return cardnames;
     },
-    //Get a basic land
+    //Get a land for the "landslot"
     getBasicLand: function(amount = 1) {
         var lands = ["Plains", "Island", "Swamp", "Mountain", "Forest"];
         var ravnicaGuildGates = ["Boros Guildgate", "Dimir Guildgate", "Selesnya Guildgate", "Izzet Guildgate", "Golgari Guildgate"];
         var ravnicaAllegianceGuildGates = ["Azorius Guildgate", "Gruul Guildgate", "Orzhov Guildgate", "Rakdos Guildgate", "Simic Guildgate"];
-        var coreSet2020Lands = ["Plains", "Island", "Swamp", "Mountain", "Forest", "Bloodfell Caves", "Blossoming Sands", "Dismal Backwater", "Evolving Wilds", "Jungle Hollow", "Rugged Highlands", "Scoured Barrens", "Swiftwater Cliffs", "Thornwood Falls", "Tranquil Cove", "Wind-Scarred Crag"]
+        var coreSet2020Lands = ["Plains", "Island", "Swamp", "Mountain", "Forest", "Bloodfell Caves", "Blossoming Sands", "Dismal Backwater", "Evolving Wilds", "Jungle Hollow", "Rugged Highlands", "Scoured Barrens", "Swiftwater Cliffs", "Thornwood Falls", "Tranquil Cove", "Wind-Scarred Crag"];
+        var kaldheimLands = ["Plains", "Island", "Swamp", "Mountain", "Forest", "Snow-Covered Plains", "Snow-Covered Island", "Snow-Covered Swamp", "Snow-Covered Mountain", "Snow-Covered Forest", "Rimewood Falls", "Ice Tunnel", "Alpine Meadow", "Snowfield Sinkhole", "Woodland Chasm", "Sulfurous Mire", "Arctic Treeline", "Volatile Fjord", "Highland Forest", "Glacial Floodplain"];
         if (setTag == "grn") {
             lands = ravnicaGuildGates;
         } if (setTag == "rna") {
             lands = ravnicaAllegianceGuildGates;
         } if (setTag == "m20") {
             lands = coreSet2020Lands;
+        } if (setTag == "khm") {
+            lands = kaldheimLands;
         }
         var shuffledBasics = utils.shuffleArray(lands);
         return shuffledBasics.slice(0, amount);
