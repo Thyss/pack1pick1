@@ -1,14 +1,13 @@
 {
   "name": "Pick1Pack1Bot",
-  "version": "1.13.5",
+  "version": "1.13.6",
   "main": "mybot.js",
   "dependencies": {
-    "discord.js": "^11.3.2",
+    "discord.js": "^11.6.4",
     "dotenv": "^6.0.0",
     "memory-cache": "^0.2.0",
     "request": "^2.87.0"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

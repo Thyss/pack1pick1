@@ -44,14 +44,41 @@ function getCardsFromCT(response, amount) {
     return cards;
 }
 
+//Get a booster with a certain number of cards from a cubetutor
+function getCardsFromCC(cube, amount) {
+    var selected = [];
+    selected = cube.toString().split('\n');
+    selected.pop();
+    selected.shift();
+    var shuffled = utils.shuffleArray(selected);
+    var cards = shuffled.slice(0,amount);
+    return cards;
+}
+
 client.on("message", (message) => {
     if (message.content.startsWith("!p1p1 brewchallenge")) {
         request('https://api.scryfall.com/cards/random', {json: true}, function (error, response, body) {
             message.channel.send(new Discord.RichEmbed().setTitle(body.name).setDescription("This is your card now and your challenge is to brew a deck around it. \n Any format where it is legal is allowed.").setImage(body.image_uris.normal).setURL(body.scryfall_uri));
             utils.log(message.author.id + " started a brewchallenge and got: " + body.name);
         });
-    }
-    else if (message.content.startsWith("!p1p1 ct") || message.content.startsWith("!p1p1 paupercube") || message.content.startsWith("!paupercube")) {
+    } else if (message.content.startsWith("!p1p1 paupercube") || message.content.startsWith("!paupercube")) {
+        let options = {
+            // https://github.com/dr4fters/dr4ft/issues/875 - github ticket where cube cardname api was added to cubecobra
+            url: 'https://cubecobra.com/cube/api/cubelist/thepaupercube',
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'
+            }
+          }
+          request(options,
+                   function (error, response, body) {
+                      let booster = getCardsFromCC(body, 15);
+                      var scryfalllink = magicTcg.createScryfallLink(booster, "name");
+                      utils.setActivity(booster, client);
+
+                      message.channel.send(new Discord.RichEmbed().setDescription(booster).setURL(scryfalllink).setTitle("15 cards from thepaupercube.com").setFooter("paypal.me/yunra"));
+                      utils.log(message.author.id + " generated a booster from a cubecobra cube");
+          });
+    } else if (message.content.startsWith("!p1p1 ct")) {
         let ctID = message.content.replace("!p1p1 ct ", "")
         var title = "Results from cube with id: " + ctID;
         if (message.content.startsWith("!p1p1 paupercube") || message.content.startsWith("!paupercube")) {
