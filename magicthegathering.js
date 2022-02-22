@@ -246,9 +246,6 @@ function getOneRandomCard(setData) {
                     message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle(setData.name).setURL(module.exports.createScryfallLink(cardnames, "rarity", setData.code)).setFooter(utils.setPatreonText(footer)));
                 } else {
                     var isBooster = "+is%3Abooster";
-                    if(module.exports.isSetReleased(setData.released_at) == false) {
-                        isBooster = "";
-                    }
                     var scryfallSearchUri = "https://api.scryfall.com/cards/search?unique=cards&q=e%3A" + set_code + isBooster + "+-t%3Abasic+-t%3Agate";
                     request(scryfallSearchUri, {json: true}, function (error, response, body) {
                         var set = JSON.parse(JSON.stringify(body));
