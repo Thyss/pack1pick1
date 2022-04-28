@@ -59,6 +59,7 @@ function getOneRandomCard(setData) {
         var uncommon = [];
         var common = [];
         for (card of set) {
+            utils.log(card.name)
             if (card.rarity == "common") {
                 if (setTag == "m20" || setTag == "khm") {
                     common = utils.removeCardtypeFromList(common, "Land");
@@ -93,8 +94,6 @@ function getOneRandomCard(setData) {
             booster = this.replaceBasicWithCard(set, "Legendary", booster);
         } if (setTag == "war") {
             booster = this.replaceBasicWithCard(set, "Planeswalker", booster);
-        } if (setTag == "stx") {
-            booster = this.replaceBasicWithCard(set, "sta", booster);
         }
 
         var cardnames = [];
@@ -153,6 +152,12 @@ function getOneRandomCard(setData) {
     },
     replaceBasicWithCard: function(set, cardtype, booster) {
         var containsCorrectCard = false;
+        for (card of booster) {
+            if (card.type_line.includes(cardtype) && !containsCorrectCard) {
+                containsCorrectCard = true;
+                break;
+            }
+        }
         if (!containsCorrectCard) {
             var cardsOfType = [];
             for (card of set) {
@@ -237,6 +242,7 @@ function getOneRandomCard(setData) {
                     var cached_set = cache.get(set_code);
                     utils.log(setData.name + " was found in the cache");
                     var cardnames = module.exports.createBooster(cached_set);
+                    utils.log(cardnames);
                     var footer = "";
                     if (packvalue >= 10) {
                         footer = "A card in this pack is worth $" + packvalue + " - " + setData.name + " was released " + setData.released_at;

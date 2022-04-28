@@ -18,10 +18,10 @@ const client = new Discord.Client();
 
 client.on("ready", () => {
     utils.log("The P1P1 bot is online!");
-    console.log("Bot is located in these servers: ");
-    client.guilds.forEach(element => {
-        console.log(element.name + " - " + element.id + " - users: "+ element.memberCount);
-    });
+    //console.log("Bot is located in these servers: ");
+    //client.guilds.forEach(element => {
+    //    console.log(element.name + " - " + element.id + " - users: "+ element.memberCount);
+    //});
 });
 
 //Get a booster with a certain number of cards from a certain set
