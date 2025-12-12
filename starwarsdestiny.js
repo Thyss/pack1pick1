@@ -8,6 +8,8 @@ const Discord = require("discord.js");
 var utils = require('./utils.js');
 var cache = require('memory-cache');
 
+const { EmbedBuilder } = require('discord.js');
+
 function createBooster(setData) {
     var mythic = [];
     var rare = [];
@@ -39,7 +41,20 @@ function createBooster(setData) {
 }
 
  module.exports = {
-     getSwdBooster: function getSwdBooster(setCode, message, client) {
+     getSwdBooster: async function getSwdBooster(setCode, interactionOrMessage, client) {
+        const reply = async (payload) => {
+          // Accept either interaction or old message object
+          if (interactionOrMessage?.isChatInputCommand) {
+            if (payload.embeds) {
+              return interactionOrMessage.editReply({ embeds: payload.embeds });
+            } else {
+              return interactionOrMessage.editReply(payload);
+            }
+          } else {
+            return interactionOrMessage.channel.send(payload);
+          }
+        };
+
         if (cache.get("swd_" + setCode)) {
             utils.log("swd_" + setCode + " was found in the cache");
             var booster = createBooster(cache.get("swd_" + setCode));
@@ -52,9 +67,10 @@ function createBooster(setData) {
                     utils.setActivityCard(card.name, client);
                 }
             }
-            message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle("Star Wars Destiny Booster").setFooter("Want visuals? http://swdestinydb.com").setImage(cardimage));
+            const embed = new EmbedBuilder().setDescription(cardnames.join('\n')).setTitle("Star Wars Destiny Booster").setFooter({ text: "Want visuals? http://swdestinydb.com" }).setImage(cardimage);
+            await reply({ embeds: [embed] });
         } else {
-            request('https://swdestinydb.com/api/public/cards/' + setCode.replace(/\s/g, ''), {json: true}, function (error, response, setData) {
+            request('https://swdestinydb.com/api/public/cards/' + setCode.replace(/\s/g, ''), {json: true}, async function (error, response, setData) {
                 cache.put("swd_" + setCode, setData);
                 utils.log("Adding set to cache with key: swd_" + setCode);
                 var booster = createBooster(setData);
@@ -66,7 +82,8 @@ function createBooster(setData) {
                         cardimage = card.imagesrc;
                     }
                 }
-                message.channel.send(new Discord.RichEmbed().setDescription(cardnames).setTitle("Star Wars Destiny Booster").setFooter("Want visuals? http://swdestinydb.com").setImage(cardimage));
+                const embed = new EmbedBuilder().setDescription(cardnames.join('\n')).setTitle("Star Wars Destiny Booster").setFooter({ text: "Want visuals? http://swdestinydb.com" }).setImage(cardimage);
+                await reply({ embeds: [embed] });
             });
         }
      }

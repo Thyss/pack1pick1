@@ -234,7 +234,6 @@ client.on("messageCreate", (message) => {
                     .setDescription(booster.join('\n'))
                     .setURL(scryfalllink)
                     .setTitle("15 cards from cubecobra")
-                    .setFooter({ text: "paypal.me/yunra" });
                 message.channel.send({ embeds: [embed] });
                 utils.log(message.author.id + " generated a booster from a cubecobra cube");
             });
